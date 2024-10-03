@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package entities;  
+
+message BankAccEntity {
+    string id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string deletedAt = 4;
+    string accountNumber = 5;
+    string currency = 6;
+    string paymentSystem = 7;
+    optional string accountName = 8;
+    uint64 balance = 9;
+    string affiliation = 10;
+    string accountType = 11;
+    bool isBlocked = 12;
+    bool isPremiumAccount = 13;
+    bool isDefaultAccount = 14;
+    UserEntity user = 15; 
+}
+
+message UserEntity {
+    string id = 1;
+    string createdAt = 2;
+    string updatedAt = 3;
+    string deletedAt = 4;
+    optional string email = 5;
+    optional string phoneNumber = 6;
+    bool isBlocked = 7; 
+    repeated BankAccEntity accounts = 8;
+}

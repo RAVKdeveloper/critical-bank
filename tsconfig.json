@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@libs/core": [
+        "libs/core/src"
+      ],
+      "@libs/core/*": [
+        "libs/core/src/*"
+      ],
+      "@libs/repository": [
+        "libs/repository/src"
+      ],
+      "@libs/repository/*": [
+        "libs/repository/src/*"
+      ],
+      "@libs/config": [
+        "libs/config/src"
+      ],
+      "@libs/config/*": [
+        "libs/config/src/*"
+      ],
+      "@libs/constants": [
+        "libs/constants/src"
+      ],
+      "@libs/constants/*": [
+        "libs/constants/src/*"
+      ],
+      "@libs/grpc-types": [
+        "libs/grpc-types/src"
+      ],
+      "@libs/grpc-types/*": [
+        "libs/grpc-types/src/*"
+      ],
+      "@libs/cache": [
+        "libs/cache/src"
+      ],
+      "@libs/cache/*": [
+        "libs/cache/src/*"
+      ]
+    }
+  },
+  "include": [
+    "./apps",
+    "./libs",
+    "libs/core/src/types"
+  ]
+}
