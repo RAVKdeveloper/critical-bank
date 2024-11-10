@@ -4,11 +4,13 @@ import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { CacheDatabaseModule } from '@libs/cache'
 import { RepositoryModule } from '@libs/repository'
 import { CustomValidationPipe, HttpInterceptor } from '@libs/core'
+import { CustomLoggerModule } from '@lib/logger'
 
 import { ConfigModule } from './config/config.module'
 
+import { AuthModule } from './modules/auth/auth.module'
 @Module({
-  imports: [CacheDatabaseModule, ConfigModule, RepositoryModule],
+  imports: [CacheDatabaseModule, ConfigModule, RepositoryModule, AuthModule, CustomLoggerModule],
   providers: [
     {
       provide: APP_INTERCEPTOR,

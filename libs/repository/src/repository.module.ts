@@ -6,11 +6,27 @@ import { ClsModule } from 'nestjs-cls'
 
 import { ConfigService } from '@libs/config'
 
-import { UserEntity, BankAccountEntity, BankCardEntity, CardLimitsEntity } from './entities'
+import {
+  UserEntity,
+  BankAccountEntity,
+  BankCardEntity,
+  CardLimitsEntity,
+  BankCryptoWallet,
+  FiatTransactionEntity,
+  CryptoTransactionEntity,
+} from './entities'
 import { DbSettings } from './repository.model'
 import { RepositoryService } from './repository.service'
 
-export const entities = [UserEntity, BankAccountEntity, BankCardEntity, CardLimitsEntity]
+export const entities = [
+  UserEntity,
+  BankAccountEntity,
+  BankCardEntity,
+  CardLimitsEntity,
+  BankCryptoWallet,
+  FiatTransactionEntity,
+  CryptoTransactionEntity,
+]
 
 @Global()
 @Module({

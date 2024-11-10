@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  clickhouse-server:
+    image: yandex/clickhouse-server
+    restart: on-failure
+    platform: linux/amd64
+    ports:
+      - '8124:8123'
+      # - '9000:9000'
+    volumes:
+      - clickhouse-server:/var/lib/clickhouse/data
+      - ./sql-scripts/clickhouse-critical-db.sql:/var/lib/clickhouse/scripts.sql
+    env_file:
+      - ../logs.env
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USERNAME}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DATABASE}
+      CLICKHOUSE_LOGS_TABLE: 'logs'
+    # networks:
+    #   - critical-bank-net
+    hostname: critical-clickhouse-server
+    command: bash -c "ulimit -n 262144 && clickhouse-server"
+  clickhouse-client:
+    image: yandex/clickhouse-client
+    restart: on-failure
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+    # networks:
+    #   - critical-bank-net
+    hostname: critical-clickhouse-client
+    depends_on:
+      - clickhouse-server
+
+volumes:
+  clickhouse-server:
+    driver: local
+    external: false
+# networks:
+#   critical-bank-net:
+#     external: true

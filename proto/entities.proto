@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package entities;  
 
+message Empty {}
+
 message BankAccEntity {
     string id = 1;
     string createdAt = 2;
@@ -29,4 +31,7 @@ message UserEntity {
     optional string phoneNumber = 6;
     bool isBlocked = 7; 
     repeated BankAccEntity accounts = 8;
+    string userName = 9;
+    string userSurname = 10;
+    optional string userLastName = 11;
 }

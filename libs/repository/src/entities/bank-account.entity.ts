@@ -5,6 +5,7 @@ import { CurrencyEnum, BankAccAffiliationEnum, BankAccountTypes } from '../enums
 import { UserEntity, BankCardEntity } from './index'
 
 import type { Nullable } from '@libs/core'
+import { ColumnNumericTransformer } from '../transformers'
 
 @Entity({ name: 'bank_account' })
 export class BankAccountEntity extends BaseEntity {
@@ -17,7 +18,14 @@ export class BankAccountEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true, name: 'account_name' })
   readonly accountName: Nullable<string>
 
-  @Column({ name: 'balance', type: 'numeric', precision: 20, scale: 5, default: 0 })
+  @Column({
+    name: 'balance',
+    type: 'numeric',
+    precision: 20,
+    scale: 5,
+    default: 0,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly balance: number
 
   @Column({ type: 'enum', enum: BankAccAffiliationEnum, default: BankAccAffiliationEnum.PERSONAL })

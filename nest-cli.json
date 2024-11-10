@@ -5,12 +5,17 @@
   "entryFile": "src/main",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": false,
+    "webpack": true,
     "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
     "assets": [
       {
+        "include": "proto/entities.proto",
+        "outDir": "dist/apps/api-gateway/proto",
+        "watchAssets": true
+      },
+      {
         "include": "proto/*.proto",
-        "outDir": "dist/apps/apigateway",
+        "outDir": "dist/apps/api-gateway",
         "watchAssets": true
       }
     ],
@@ -25,20 +30,7 @@
       "entryFile": "src/main",
       "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "assets": [
-          {
-            "include": "proto/admin.proto",
-            "outDir": "dist/apps/apigateway/proto",
-            "watchAssets": true
-          },
-          {
-            "include": "proto/invites.proto",
-            "outDir": "dist/apps/apigateway",
-            "watchAssets": true
-          }
-        ],
-        "watchAssets": true
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
       }
     },
     "auth": {
@@ -47,7 +39,20 @@
       "entryFile": "src/main",
       "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth/tsconfig.app.json"
+        "tsConfigPath": "apps/auth/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/entities.proto",
+            "outDir": "dist/apps/auth/proto",
+            "watchAssets": true
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/apps/auth",
+            "watchAssets": true
+          }
+        ],
+        "watchAssets": true
       }
     },
     "core": {
@@ -102,6 +107,42 @@
       "sourceRoot": "libs/cache/src",
       "compilerOptions": {
         "tsConfigPath": "libs/cache/tsconfig.lib.json"
+      }
+    },
+    "micro-clients": {
+      "type": "library",
+      "root": "libs/micro-clients",
+      "entryFile": "index",
+      "sourceRoot": "libs/micro-clients/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/micro-clients/tsconfig.lib.json"
+      }
+    },
+    "kafka-types": {
+      "type": "library",
+      "root": "libs/kafka-types",
+      "entryFile": "index",
+      "sourceRoot": "libs/kafka-types/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/kafka-types/tsconfig.lib.json"
+      }
+    },
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    },
+    "clickhouse": {
+      "type": "library",
+      "root": "libs/clickhouse",
+      "entryFile": "index",
+      "sourceRoot": "libs/clickhouse/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/clickhouse/tsconfig.lib.json"
       }
     }
   }

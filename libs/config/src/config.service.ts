@@ -15,7 +15,8 @@ export class ConfigService<T extends object> {
 
   constructor(@Inject('CONFIG_OPTIONS') private options: ConfigOptions<T>) {
     const isDev = process.env.NODE_ENV === 'development'
-    const devEnvPath = join(process.cwd(), `${process.env['APP']}.env`)
+    const includeInApp = process.env['ENV_FILE_PATH'] ?? ''
+    const devEnvPath = join(process.cwd(), includeInApp, `${process.env['APP']}.env`)
     const env = isDev ? parse(readFileSync(devEnvPath)) : (process.env as Partial<T>)
     const config = plainToClass(options.dto, env) as Record<string, unknown>
     const envValidation = validateSync(config)

@@ -5,6 +5,7 @@ import { BankCryptoWallet } from '../index'
 import { CryptoEnum, TransactionArticle, TransactionStatus, TransactionType } from '../../enums'
 
 import type { Nullable } from '@libs/core'
+import { ColumnNumericTransformer } from '@libs/repository/transformers'
 
 @Entity({ name: 'crypto_transaction' })
 @Unique(['networkTxHash', 'cryptoCurrency'])
@@ -16,10 +17,22 @@ export class CryptoTransactionEntity extends BaseEntity {
   @Column({ name: 'crypto_currency', type: 'enum', enum: CryptoEnum })
   readonly cryptoCurrency: CryptoEnum
 
-  @Column({ name: 'tx_amount' })
+  @Column({
+    name: 'tx_amount',
+    type: 'numeric',
+    scale: 50,
+    precision: 10,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly amount: number
 
-  @Column({ name: 'tx_fee' })
+  @Column({
+    name: 'tx_fee',
+    type: 'numeric',
+    scale: 20,
+    precision: 5,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly fee: number
 
   @Column({ name: 'type', type: 'enum', enum: TransactionType })

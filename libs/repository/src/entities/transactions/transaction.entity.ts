@@ -3,6 +3,7 @@ import { Entity, Column, ManyToOne, JoinColumn, Relation } from 'typeorm'
 import { BaseEntity } from '../../base/base.entity'
 import { BankCardEntity } from '../index'
 import { TransactionArticle, TransactionType, TransactionStatus } from '../../enums'
+import { ColumnNumericTransformer } from '@libs/repository/transformers'
 
 @Entity({ name: 'fiat_transaction' })
 export class FiatTransactionEntity extends BaseEntity {
@@ -26,10 +27,23 @@ export class FiatTransactionEntity extends BaseEntity {
   @JoinColumn({ name: 'recipient_card_id', referencedColumnName: 'id' })
   readonly recipient: Relation<BankCardEntity>
 
-  @Column({ name: 'tx_amount' })
+  @Column({
+    name: 'tx_amount',
+    type: 'numeric',
+    scale: 50,
+    precision: 10,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly amount: number
 
-  @Column({ name: 'tx_fee', default: 0 })
+  @Column({
+    name: 'tx_fee',
+    default: 0,
+    type: 'numeric',
+    scale: 10,
+    precision: 10,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly fee: number
 
   @Column({

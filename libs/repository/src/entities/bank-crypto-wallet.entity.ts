@@ -3,14 +3,15 @@ import { Entity, Column, ManyToOne, Relation, JoinColumn, OneToMany } from 'type
 import { BaseEntity } from '../base/base.entity'
 import { UserEntity, CryptoTransactionEntity } from './index'
 import { CryptoEnum } from '../enums'
+import { Nullable } from '@libs/core'
 
 @Entity({ name: 'bank_crypto_wallet' })
 export class BankCryptoWallet extends BaseEntity {
   @Column({ name: 'crypto_currency', type: 'enum', enum: CryptoEnum })
   readonly cryptoCurrency: CryptoEnum
 
-  @Column({ name: 'public_key' })
-  readonly publicKey: string
+  @Column({ name: 'public_key', nullable: true, default: null, type: 'varchar' })
+  readonly publicKey: Nullable<string>
 
   @Column({ name: 'private_key' })
   readonly privateKey: string

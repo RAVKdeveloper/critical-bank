@@ -8,6 +8,7 @@ import { ConfigService } from '@libs/config'
 
 import { AppModule } from './app.module'
 import { ConfigModel } from './config/config.model'
+import { CustomLogger } from '@lib/logger'
 
 const enableCorsByEnv = (app: INestApplication<unknown>, config: ConfigService<ConfigModel>) => {
   if (process.env['NODE_ENV'] === 'development') {
@@ -37,6 +38,7 @@ const swaggerBuilder = (app: INestApplication<unknown>) => {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const config = app.get<ConfigService<ConfigModel>>(ConfigService)
+  app.useLogger(app.get(CustomLogger))
   app.use(cookieParser())
   app.setGlobalPrefix('/api')
   enableCorsByEnv(app, config)

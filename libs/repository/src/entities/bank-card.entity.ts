@@ -16,13 +16,13 @@ import { FiatTransactionEntity } from './transactions/transaction.entity'
 import { PaymentSystemEnum, CardType, CardVariant } from '../enums'
 
 import type { Nullable } from '@libs/core'
+import { ColumnNumericTransformer } from '../transformers'
 
 @Entity({ name: 'bank_card' })
 export class BankCardEntity extends BaseEntity {
   @Column({ name: 'card_number', unique: true, type: 'varchar', length: 16 })
   readonly cardNumber: string
 
-  @Index('Bank_card_type_index')
   @Column({ name: 'card_type', enum: CardType, type: 'enum', default: CardType.DEBIT })
   readonly cardType: CardType
 
@@ -38,10 +38,16 @@ export class BankCardEntity extends BaseEntity {
   @Column({ name: 'is_blocked', default: false })
   readonly isBlocked: boolean
 
-  @Column({ name: 'card_balance', type: 'numeric', precision: 20, scale: 5, default: 0 })
+  @Column({
+    name: 'card_balance',
+    type: 'numeric',
+    precision: 20,
+    scale: 5,
+    default: 0,
+    transformer: new ColumnNumericTransformer(),
+  })
   readonly cardBalance: number
 
-  @Index('Bank_card_payment_system_index')
   @Column({
     type: 'enum',
     enum: PaymentSystemEnum,
@@ -56,7 +62,6 @@ export class BankCardEntity extends BaseEntity {
   @Column({ name: 'card_issue_date', type: 'timestamp' })
   readonly cardIssueDate: Date
 
-  @Index('Bank_card_variant_index')
   @Column({ name: 'card_variant', type: 'enum', enum: CardVariant, default: CardVariant.COMMON })
   readonly cardVariant: CardVariant
 

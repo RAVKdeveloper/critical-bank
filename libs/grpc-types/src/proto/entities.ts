@@ -8,11 +8,13 @@
 
 export const protobufPackage = 'entities'
 
+export interface Empty {}
+
 export interface BankAccEntity {
   id: string
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  createdAt: string
+  updatedAt: string
+  deletedAt: string
   accountNumber: string
   currency: string
   paymentSystem: string
@@ -30,11 +32,14 @@ export interface UserEntity {
   id: string
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date
-  email: string | null
-  phoneNumber: string | null
+  deletedAt: Date | null
+  userName: string
+  userSurname: string
+  userLastName: string | null
+  email?: string | undefined
+  phoneNumber?: string | undefined
   isBlocked: boolean
-  accounts: BankAccEntity[]
+  accounts: any
 }
 
 export const ENTITIES_PACKAGE_NAME = 'entities'

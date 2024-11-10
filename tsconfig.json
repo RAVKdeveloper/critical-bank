@@ -53,6 +53,30 @@
       ],
       "@libs/cache/*": [
         "libs/cache/src/*"
+      ],
+      "@lib/micro-clients": [
+        "libs/micro-clients/src"
+      ],
+      "@lib/micro-clients/*": [
+        "libs/micro-clients/src/*"
+      ],
+      "@lib/kafka-types": [
+        "libs/kafka-types/src"
+      ],
+      "@lib/kafka-types/*": [
+        "libs/kafka-types/src/*"
+      ],
+      "@lib/logger": [
+        "libs/logger/src"
+      ],
+      "@lib/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@lib/clickhouse": [
+        "libs/clickhouse/src"
+      ],
+      "@lib/clickhouse/*": [
+        "libs/clickhouse/src/*"
       ]
     }
   },

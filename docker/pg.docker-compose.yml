@@ -1,0 +1,52 @@
+version: '3.1'
+
+services:
+  pg:
+    image: postgres:16
+    container_name: critical-pg-db
+    restart: on-failure
+    env_file:
+      - ../typeorm.env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      LC_ALL: ${LC_ALL:-C.UTF-8}
+    ports:
+      - '5433:5432'
+    hostname: critical-db-host
+    volumes:
+      - critical-pg-vol:/var/lib/postgresql/data
+    networks:
+      - critical-bank-net
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: critical-pgadmin
+    restart: on-failure
+    env_file:
+      - ../typeorm.env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '5050:80'
+    depends_on:
+      - pg
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - critical-bank-net
+volumes:
+  critical-pg-vol:
+    driver: local
+  pgadmin-data:
+    driver: local
+networks:
+  critical-bank-net:
+    external: true
