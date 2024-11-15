@@ -30,8 +30,8 @@ export class FiatTransactionEntity extends BaseEntity {
   @Column({
     name: 'tx_amount',
     type: 'numeric',
-    scale: 50,
-    precision: 10,
+    scale: 7,
+    precision: 100,
     transformer: new ColumnNumericTransformer(),
   })
   readonly amount: number
@@ -40,8 +40,8 @@ export class FiatTransactionEntity extends BaseEntity {
     name: 'tx_fee',
     default: 0,
     type: 'numeric',
-    scale: 10,
-    precision: 10,
+    scale: 5,
+    precision: 40,
     transformer: new ColumnNumericTransformer(),
   })
   readonly fee: number

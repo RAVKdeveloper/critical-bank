@@ -21,7 +21,7 @@ export class HttpInterceptor implements NestInterceptor {
 
   constructor() {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const res: Response = context.switchToHttp().getResponse()
 
     return next

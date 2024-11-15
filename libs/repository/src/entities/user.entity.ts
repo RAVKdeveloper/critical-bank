@@ -31,11 +31,17 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'email', unique: true, nullable: true, type: 'varchar' })
   readonly email: Nullable<string>
 
+  @Column({ name: 'password_hash', type: 'varchar' })
+  readonly passwordHash: string
+
   @Column({ name: 'phone_number', unique: true, nullable: true, type: 'varchar' })
   readonly phoneNumber: Nullable<string>
 
   @Column({ name: 'is_blocked', default: false })
   readonly isBlocked: boolean
+
+  @Column({ name: 'is_verify', default: false })
+  readonly isVerify: boolean
 
   @OneToMany(() => BankAccountEntity, acc => acc.user)
   readonly accounts: Relation<BankAccountEntity[]>

@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "first:up": "sudo sh bash-scripts/dev/first-up.sh",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
@@ -17,9 +18,14 @@
     "typeorm:up": "node ./scripts/typeorm/migrationUp.js",
     "typeorm:down": "node ./scripts/typeorm/migrationDown.js",
     "grpc:gen": "node ./scripts/grpc/gen-proto-types.js",
-    "apigateway:dev": "NODE_ENV=development APP=apigateway nest start api-gateway --watch",
-    "apigateway:prod": "NODE_ENV=production APP=apigateway node dist/apps/api-gateway/src/main.js",
-    "auth:dev": "NODE_ENV=development APP=apigateway nest start auth --watch"
+    "mongo:generate": "migrate create --template-file ./libs/mongo-repo/src/migrations-utils/template.ts --migrations-dir=\"./libs/mongo-repo/src/migrations\" --compiler=\"ts:./libs/mongo-repo/src/migrations-utils/ts-compiler.js\"",
+    "mongo:up": "migrate --migrations-dir=\"./libs/mongo-repo/src/migrations\" --compiler=\"ts:./libs/mongo-repo/src/migrations-utils/ts-compiler.js\" --store=\"./libs/mongo-repo/src/migrations-utils/storage.js\" up",
+    "mongo:down": "migrate --migrations-dir=\"./libs/mongo-repo/src/migrations\" --compiler=\"ts:./libs/mongo-repo/src/migrations-utils/ts-compiler.js\" --store=\"./libs/mongo-repo/src/migrations-utils/storage.js\" down",
+    "apigateway:dev": "NODE_ENV=development APP=apigateway ENV_FILE_PATH=envs nest start api-gateway --watch",
+    "apigateway:prod": "NODE_ENV=production APP=apigateway ENV_FILE_PATH=envs node dist/apps/api-gateway/src/main.js",
+    "auth:dev": "NODE_ENV=development APP=auth ENV_FILE_PATH=envs nest start auth --watch",
+    "auth:prod": "NODE_ENV=production APP=auth ENV_FILE_PATH=envs node dist/apps/auth/src/main.js",
+    "notif:dev": "NODE_ENV=development APP=notification ENV_FILE_PATH=envs nest start notifications --watch"
   },
   "dependencies": {
     "@clickhouse/client": "^1.6.0",
@@ -28,17 +34,23 @@
     "@nestjs-cls/transactional": "^2.4.2",
     "@nestjs-cls/transactional-adapter-typeorm": "^1.2.4",
     "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/axios": "^3.1.2",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/microservices": "^10.4.4",
+    "@nestjs/mongoose": "^10.1.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/throttler": "^6.2.1",
     "@nestjs/typeorm": "^10.0.2",
+    "@noble/hashes": "^1.5.0",
+    "@willsoto/nestjs-prometheus": "^6.0.1",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
+    "bs58": "^6.0.0",
     "cache-manager": "^4.0.0",
     "cache-manager-redis-yet": "^5.1.5",
     "class-transformer": "^0.5.1",
@@ -47,6 +59,8 @@
     "decimal.js": "^10.4.3",
     "dotenv": "^16.4.5",
     "kafkajs": "^2.2.4",
+    "migrate": "^2.1.0",
+    "mongoose": "^8.8.1",
     "nestjs-cls": "^4.4.1",
     "nestjs-grpc-exceptions": "^0.2.2",
     "nestjs-pino": "^4.1.0",
@@ -57,6 +71,7 @@
     "prom-client": "^15.1.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "telegraf": "^4.16.3",
     "ts-proto": "^2.2.1",
     "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
@@ -66,6 +81,8 @@
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/bs58": "^4.0.4",
+    "@types/cache-manager": "^4.0.6",
     "@types/cookie-parser": "^1.4.7",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
@@ -119,7 +136,11 @@
       "^@lib/micro-clients(|/.*)$": "<rootDir>/libs/micro-clients/src/$1",
       "^@lib/kafka-types(|/.*)$": "<rootDir>/libs/kafka-types/src/$1",
       "^@lib/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
-      "^@lib/clickhouse(|/.*)$": "<rootDir>/libs/clickhouse/src/$1"
+      "^@lib/loki(|/.*)$": "<rootDir>/libs/clickhouse/src/$1",
+      "^@lib/mongo-repo(|/.*)$": "<rootDir>/libs/mongo-repo/src/$1",
+      "^@lib/tg-bot(|/.*)$": "<rootDir>/libs/tg-bot/src/$1",
+      "^@lib/rate-limiter(|/.*)$": "<rootDir>/libs/rate-limiter/src/$1",
+      "^@lib/crypto(|/.*)$": "<rootDir>/libs/crypto/src/$1"
     }
   }
 }

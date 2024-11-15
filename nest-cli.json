@@ -136,13 +136,62 @@
         "tsConfigPath": "libs/logger/tsconfig.lib.json"
       }
     },
-    "clickhouse": {
+    "loki": {
       "type": "library",
-      "root": "libs/clickhouse",
+      "root": "libs/loki",
       "entryFile": "index",
-      "sourceRoot": "libs/clickhouse/src",
+      "sourceRoot": "libs/loki/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/clickhouse/tsconfig.lib.json"
+        "tsConfigPath": "libs/loki/tsconfig.lib.json"
+      }
+    },
+    "notifications": {
+      "type": "application",
+      "root": "apps/notifications",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notifications/tsconfig.app.json",
+        "assets": [
+          "notifications/src/**/*.hbs"
+        ],
+        "watchAssets": true
+      }
+    },
+    "mongo-repo": {
+      "type": "library",
+      "root": "libs/mongo-repo",
+      "entryFile": "index",
+      "sourceRoot": "libs/mongo-repo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mongo-repo/tsconfig.lib.json"
+      }
+    },
+    "tg-bot": {
+      "type": "library",
+      "root": "libs/tg-bot",
+      "entryFile": "index",
+      "sourceRoot": "libs/tg-bot/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tg-bot/tsconfig.lib.json"
+      }
+    },
+    "rate-limiter": {
+      "type": "library",
+      "root": "libs/rate-limiter",
+      "entryFile": "index",
+      "sourceRoot": "libs/rate-limiter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/rate-limiter/tsconfig.lib.json"
+      }
+    },
+    "crypto": {
+      "type": "library",
+      "root": "libs/crypto",
+      "entryFile": "index",
+      "sourceRoot": "libs/crypto/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/crypto/tsconfig.lib.json"
       }
     }
   }

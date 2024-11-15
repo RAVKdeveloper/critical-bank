@@ -25,5 +25,6 @@ import type { CacheDbConfig } from './config.model'
       inject: [ConfigService],
     }),
   ],
+  exports: [CacheModule],
 })
 export class CacheDatabaseModule {}

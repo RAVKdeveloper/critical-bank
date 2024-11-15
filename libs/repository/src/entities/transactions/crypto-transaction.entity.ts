@@ -20,8 +20,8 @@ export class CryptoTransactionEntity extends BaseEntity {
   @Column({
     name: 'tx_amount',
     type: 'numeric',
-    scale: 50,
-    precision: 10,
+    scale: 5,
+    precision: 130,
     transformer: new ColumnNumericTransformer(),
   })
   readonly amount: number
@@ -29,8 +29,8 @@ export class CryptoTransactionEntity extends BaseEntity {
   @Column({
     name: 'tx_fee',
     type: 'numeric',
-    scale: 20,
-    precision: 5,
+    scale: 5,
+    precision: 50,
     transformer: new ColumnNumericTransformer(),
   })
   readonly fee: number

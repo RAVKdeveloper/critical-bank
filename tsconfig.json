@@ -72,11 +72,35 @@
       "@lib/logger/*": [
         "libs/logger/src/*"
       ],
-      "@lib/clickhouse": [
-        "libs/clickhouse/src"
+      "@lib/loki": [
+        "libs/loki/src"
       ],
-      "@lib/clickhouse/*": [
-        "libs/clickhouse/src/*"
+      "@lib/loki/*": [
+        "libs/loki/src/*"
+      ],
+      "@lib/mongo-repo": [
+        "libs/mongo-repo/src"
+      ],
+      "@lib/mongo-repo/*": [
+        "libs/mongo-repo/src/*"
+      ],
+      "@lib/tg-bot": [
+        "libs/tg-bot/src"
+      ],
+      "@lib/tg-bot/*": [
+        "libs/tg-bot/src/*"
+      ],
+      "@lib/rate-limiter": [
+        "libs/rate-limiter/src"
+      ],
+      "@lib/rate-limiter/*": [
+        "libs/rate-limiter/src/*"
+      ],
+      "@lib/crypto": [
+        "libs/crypto/src"
+      ],
+      "@lib/crypto/*": [
+        "libs/crypto/src/*"
       ]
     }
   },

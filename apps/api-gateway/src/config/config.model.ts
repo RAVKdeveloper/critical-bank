@@ -1,27 +1,9 @@
 import { Transform } from 'class-transformer'
 import { IsEmail, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
-import type { ClickHouseEnvs } from '@lib/clickhouse/interface/default.envs'
-
-export class ConfigModel implements ClickHouseEnvs {
+export class ConfigModel {
   @IsString()
-  @IsEmail()
-  PGADMIN_DEFAULT_EMAIL: string
-
-  @IsString()
-  PGADMIN_DEFAULT_PASSWORD: string
-
-  @IsString()
-  CLICKHOUSE_URL: string
-
-  @IsString()
-  CLICKHOUSE_USERNAME: string
-
-  @IsString()
-  CLICKHOUSE_PASSWORD: string
-
-  @IsString()
-  CLICKHOUSE_DATABASE: string
+  LOKI_ENDPOINT: string
 
   @IsString()
   DB_NAME: string

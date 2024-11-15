@@ -1,21 +1,8 @@
+import { arrayTransformer, numTransformer } from '@libs/core'
 import { Transform } from 'class-transformer'
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsArray, IsNumber, IsString } from 'class-validator'
 
-import type { ClickHouseEnvs } from '@lib/clickhouse/interface/default.envs'
-
-export class ConfigModel implements ClickHouseEnvs {
-  @IsString()
-  CLICKHOUSE_DATABASE: string
-
-  @IsString()
-  CLICKHOUSE_URL: string
-
-  @IsString()
-  CLICKHOUSE_USERNAME: string
-
-  @IsString()
-  CLICKHOUSE_PASSWORD: string
-
+export class ConfigModel {
   @IsString()
   DB_NAME: string
 
@@ -45,4 +32,12 @@ export class ConfigModel implements ClickHouseEnvs {
 
   @IsString()
   REDIS_PASSWORD: string
+
+  @Transform(arrayTransformer)
+  @IsArray()
+  KAFKA_BROKERS_ARRAY: string[]
+
+  @Transform(numTransformer)
+  @IsNumber()
+  AUTH_CODE_LENGTH: number
 }

@@ -6,7 +6,7 @@ services:
     container_name: critical-pg-db
     restart: on-failure
     env_file:
-      - ../typeorm.env
+      - ../envs/typeorm.env
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -29,7 +29,7 @@ services:
     container_name: critical-pgadmin
     restart: on-failure
     env_file:
-      - ../typeorm.env
+      - ../envs/typeorm.env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

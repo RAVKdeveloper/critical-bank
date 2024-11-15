@@ -1,44 +1,73 @@
 version: '3'
 
 services:
-  clickhouse-server:
-    image: yandex/clickhouse-server
-    restart: on-failure
-    platform: linux/amd64
-    ports:
-      - '8124:8123'
-      # - '9000:9000'
+  critical-grafana:
+    image: grafana/grafana-enterprise
+    container_name: critical-grafana
+    restart: unless-stopped
     volumes:
-      - clickhouse-server:/var/lib/clickhouse/data
-      - ./sql-scripts/clickhouse-critical-db.sql:/var/lib/clickhouse/scripts.sql
-    env_file:
-      - ../logs.env
+      - critical-grafana:/etc/grafana
+    ports:
+      - '8134:3000'
+    networks:
+      - grafana
+      - critical-bank-net
+
+  critical-loki:
+    image: grafana/loki:2.9.2
+    container_name: critical-loki
+    ports:
+      - '7100:3100'
+    volumes:
+      - './configs/loki-config.yaml:/etc/loki/local-config.yaml'
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - grafana
+
+  critical-prometheus:
+    image: prom/prometheus:latest
+    container_name: critical-prometheus
     environment:
-      CLICKHOUSE_USER: ${CLICKHOUSE_USERNAME}
-      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
-      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DATABASE}
-      CLICKHOUSE_LOGS_TABLE: 'logs'
-    # networks:
-    #   - critical-bank-net
-    hostname: critical-clickhouse-server
-    command: bash -c "ulimit -n 262144 && clickhouse-server"
-  clickhouse-client:
-    image: yandex/clickhouse-client
-    restart: on-failure
-    entrypoint:
-      - /bin/sleep
+      TZ: 'Europe/Moscow'
+    restart: unless-stopped
+    volumes:
+      # - './configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro'
+      - 'prometheus_data:/prometheus'
     command:
-      - infinity
-    # networks:
-    #   - critical-bank-net
-    hostname: critical-clickhouse-client
-    depends_on:
-      - clickhouse-server
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - '9090:9090'
+    networks:
+      - grafana
+
+  critical-node-exporter:
+    image: prom/node-exporter
+    container_name: critical-node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    hostname: exporter
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.ignored-mount-points
+      - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+    ports:
+      - 9100:9100
+    restart: unless-stopped
+    environment:
+      TZ: 'Europe/Moscow'
+    networks:
+      - grafana
 
 volumes:
-  clickhouse-server:
-    driver: local
-    external: false
-# networks:
-#   critical-bank-net:
-#     external: true
+  prometheus_data:
+    external: true
+  critical-grafana:
+    external: true
+networks:
+  grafana:
+    external: true
+  critical-bank-net:
+    external: true

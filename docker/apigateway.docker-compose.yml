@@ -9,9 +9,9 @@ services:
     volumes:
       - .:/usr/src/app
     env_file:
-      - ../apigateway.env
+      - ../envs/apigateway.env
     ports:
-      - '5001:5001'
+      - '3001:3001'
     depends_on:
       - redis
     links:
@@ -27,7 +27,7 @@ services:
     volumes:
       - redis:/data
     env_file:
-      - ../apigateway.env
+      - ../envs/apigateway.env
     environment:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
@@ -36,32 +36,9 @@ services:
     networks:
       - critical-bank-net
     hostname: critical-redis
-  clickhouse-server:
-    image: yandex/clickhouse-server
-    restart: on-failure
-    platform: linux/amd64
-    ports:
-      - '8124:8123'
-      - '9000:9000'
-    volumes:
-      - clickhouse-server:/var/lib/clickhouse/data
-      - ./sql-scripts/clickhouse-critical-db.sql:/var/lib/clickhouse/scripts.sql
-    env_file:
-      - ../apigateway.env
-    environment:
-      CLICKHOUSE_USER: ${CLICKHOUSE_USERNAME}
-      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
-      CLICKHOUSE_DATABASE: ${CLICKHOUSE_DATABASE}
-      CLICKHOUSE_LOGS_TABLE: 'logs'
-    networks:
-      - critical-bank-net
-    hostname: critical-clickhouse-server
-    command: bash -c "ulimit -n 262144 && clickhouse-server"
 volumes:
   redis:
     driver: local
-  clickhouse-server:
-    external: true
 networks:
   critical-bank-net:
     external: true

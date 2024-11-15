@@ -1,5 +1,10 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common'
-import { ClientsModule, Transport, ClientsModuleOptions } from '@nestjs/microservices'
+import {
+  ClientsModule,
+  Transport,
+  ClientsModuleOptions,
+  ClientsModuleAsyncOptions,
+} from '@nestjs/microservices'
 
 import type { KafkaModuleParams } from './dto/kafka-params.dto'
 
@@ -76,27 +81,27 @@ export class KafkaClientModule {
         useFactory: params.useFactory,
         inject: params.inject || [],
       },
-      {
-        provide: 'KAFKA_MODULE_PARAMS',
-        useFactory: async (kafkaParams: KafkaModuleParams) => {
-          return [
-            {
-              name: kafkaParams.serviceName,
-              transport: Transport.KAFKA,
-              options: {
-                client: {
-                  clientId: kafkaParams.clientId,
-                  brokers: kafkaParams.brokers,
-                },
-                consumer: {
-                  groupId: kafkaParams.groupId,
-                },
-              },
-            },
-          ]
-        },
-        inject: ['KAFKA_MODULE_PARAMS'],
-      },
+      // {
+      //   provide: 'KAFKA_MODULE_PARAMS',
+      //   useFactory: async (kafkaParams: KafkaModuleParams) => {
+      //     return [
+      //       {
+      //         name: kafkaParams.serviceName,
+      //         transport: Transport.KAFKA,
+      //         options: {
+      //           client: {
+      //             clientId: kafkaParams.clientId,
+      //             brokers: kafkaParams.brokers,
+      //           },
+      //           consumer: {
+      //             groupId: kafkaParams.groupId,
+      //           },
+      //         },
+      //       },
+      //     ]
+      //   },
+      //   inject: ['KAFKA_MODULE_PARAMS'],
+      // },
     ]
   }
 }

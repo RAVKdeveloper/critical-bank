@@ -41,7 +41,7 @@ export class BankCardEntity extends BaseEntity {
   @Column({
     name: 'card_balance',
     type: 'numeric',
-    precision: 20,
+    precision: 70,
     scale: 5,
     default: 0,
     transformer: new ColumnNumericTransformer(),

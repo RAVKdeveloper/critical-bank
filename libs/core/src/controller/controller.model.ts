@@ -36,9 +36,9 @@ export class ControllerResponse<T> {
 export const getRequestUser = (data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest()
 
-  return request.user
+  return request.tgUser
 }
-export const User = createParamDecorator(getRequestUser)
+export const TgUser = createParamDecorator(getRequestUser)
 
 export const makeResponse = async <T, E, R>(
   data: T | BaseError<E>,

@@ -40,7 +40,7 @@ async function bootstrap() {
   const config = app.get<ConfigService<ConfigModel>>(ConfigService)
   app.useLogger(app.get(CustomLogger))
   app.use(cookieParser())
-  app.setGlobalPrefix('/api')
+  app.setGlobalPrefix('api')
   enableCorsByEnv(app, config)
   swaggerBuilder(app)
   app.useGlobalPipes(new CustomValidationPipe())

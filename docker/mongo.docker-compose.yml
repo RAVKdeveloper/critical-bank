@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  critical-mongo:
+    image: mongo
+    restart: on-failure
+    env_file:
+      - ../envs/mongo.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - '27017:27017'
+    networks:
+      - critical-bank-net
+    hostname: critical-bank-mongo
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+volumes:
+  mongo-db-vol:
+    driver: local
+networks:
+  critical-bank-net:
+    external: true

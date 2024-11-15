@@ -1,13 +1,12 @@
+import { LokiService } from '@lib/loki'
 import { Inject, Injectable } from '@nestjs/common'
 import { PARAMS_PROVIDER_TOKEN, Params, PinoLogger } from 'nestjs-pino'
-
-import { ClickhouseService, Table, Logs } from '@lib/clickhouse'
 
 @Injectable()
 export class CustomLogger extends PinoLogger {
   constructor(
     @Inject(PARAMS_PROVIDER_TOKEN) private params: Params,
-    private readonly client: ClickhouseService,
+    private readonly lokiService: LokiService,
   ) {
     super(params)
   }
@@ -20,15 +19,18 @@ export class CustomLogger extends PinoLogger {
     service?: string,
   ) {
     try {
-      if (message && message.trim()) {
-        const log = new Logs({ userId, level, message, data, service })
-
-        return await this.client.insert(Table.LOGS, [log])
-      } else {
-        this.logger.error('Пустой лог, не отправляем в Clickhouse')
-      }
+      await this.lokiService.push({
+        key: level,
+        method: `service - ${service}`,
+        path: service,
+        status: 0,
+        timestamp: new Date(),
+        type: 'application',
+        time: 0,
+        userId,
+      })
     } catch (error) {
-      this.logger.error(error, { message, data })
+      console.log(error)
       throw error
     }
   }

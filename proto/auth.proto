@@ -20,6 +20,7 @@ message RegistrationMsg {
     string userName = 4;
     string userSurname = 5;
     optional string userLastName = 6;
+    string password = 7; 
 }
 
 message LoginMsg {

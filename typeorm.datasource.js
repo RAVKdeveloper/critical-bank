@@ -4,7 +4,7 @@ const { resolve } = require('path')
 const { DataSource } = require('typeorm')
 const { config } = require('dotenv')
 
-const envFile = resolve(__dirname, 'typeorm.env')
+const envFile = resolve(__dirname, 'envs', 'typeorm.env')
 let env
 if (existsSync(envFile)) {
   env = config({ path: envFile }).parsed
@@ -21,7 +21,7 @@ function getConfig() {
     password: env['DB_PASSWORD'],
     database: env['DB_NAME'],
     migrations: [resolve(__dirname, 'libs/repository/src/migrations/*.js')],
-    entities: [resolve(__dirname, 'dist/libs/repository/repository/src/entities/**/*.entity.js')],
+    entities: [resolve(__dirname, 'dist/libs/**/*.entity.js')],
     migrationsTableName: 'migrations',
     synchronize: false,
   })

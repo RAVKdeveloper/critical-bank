@@ -18,6 +18,7 @@ export interface RegistrationMsg {
   userName: string
   userSurname: string
   userLastName?: string | undefined
+  password: string
 }
 
 export interface LoginMsg {
