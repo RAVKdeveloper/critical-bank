@@ -10,7 +10,7 @@ import {
   Logger,
   NestInterceptor,
 } from '@nestjs/common'
-import { Response } from 'express'
+import { Response, Request } from 'express'
 import { Observable, catchError, map, of } from 'rxjs'
 
 import { objToString } from '../utils'

@@ -101,6 +101,18 @@
       ],
       "@lib/crypto/*": [
         "libs/crypto/src/*"
+      ],
+      "@lib/tokens": [
+        "libs/tokens/src"
+      ],
+      "@lib/tokens/*": [
+        "libs/tokens/src/*"
+      ],
+      "@lib/core-auth": [
+        "libs/core-auth/src"
+      ],
+      "@lib/core-auth/*": [
+        "libs/core-auth/src/*"
       ]
     }
   },

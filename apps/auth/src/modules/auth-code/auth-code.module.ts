@@ -1,7 +1,6 @@
 import { KafkaClientModule } from '@lib/micro-clients'
 import { CacheDatabaseModule } from '@libs/cache'
 import { ConfigModule, ConfigService } from '@libs/config'
-import { RepositoryModule } from '@libs/repository'
 import { Module } from '@nestjs/common'
 import {
   NOTIFICATIONS_CLIENT_ID,
@@ -11,23 +10,37 @@ import {
 import { ConfigModel } from '../../config/config.model'
 import { AuthCodeService } from './auth-code.service'
 import { CryptoModule } from '@lib/crypto'
+import { Transport } from '@nestjs/microservices'
 
 @Module({
   imports: [
     CacheDatabaseModule,
-    RepositoryModule,
     ConfigModule,
-    KafkaClientModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: ({ env }: ConfigService<ConfigModel>) => {
-        return {
-          brokers: env.KAFKA_BROKERS_ARRAY as string[],
-          serviceName: NOTIFICATIONS_SERVICE_NAME,
-          clientId: NOTIFICATIONS_CLIENT_ID,
-          groupId: NOTIFICATION_CONSUMER,
-        }
+    KafkaClientModule.registerAsync([
+      {
+        clients: [
+          {
+            inject: [ConfigService],
+            useFactory: ({ env }: ConfigService<ConfigModel>) => {
+              return {
+                transport: Transport.KAFKA,
+                name: NOTIFICATIONS_SERVICE_NAME,
+                options: {
+                  client: {
+                    clientId: NOTIFICATIONS_CLIENT_ID,
+                    brokers: env.KAFKA_BROKERS_ARRAY as string[],
+                  },
+                  consumer: {
+                    groupId: NOTIFICATION_CONSUMER,
+                  },
+                },
+              }
+            },
+            name: NOTIFICATIONS_SERVICE_NAME,
+          },
+        ],
       },
-    }),
+    ]),
     CryptoModule,
   ],
   providers: [AuthCodeService],

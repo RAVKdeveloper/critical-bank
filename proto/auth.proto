@@ -8,7 +8,6 @@ package auth;
 service AuthService {
   rpc Registration (RegistrationMsg) returns (ResUserMsg) {}
   rpc Login (LoginMsg) returns (ResUserMsg) {}
-  rpc RepeatAuthCode (RepeatVerificationCodeMsg) returns (entities.Empty) {}
   rpc VerifyAuthCode (VerifyAuthCodeMsg) returns (ResUserMsg) {}
   rpc Me (GetMeMsg) returns (ResUserMsg) {}
 }
@@ -26,16 +25,18 @@ message RegistrationMsg {
 message LoginMsg {
     optional string email = 1;
     optional string phoneNumber = 2;
-}
-
-message RepeatVerificationCodeMsg {
-    optional string email = 1;
-    optional string phoneNumber = 2; 
+    string password = 3;
 }
 
 message VerifyAuthCodeMsg {
     string userId = 1;
-    int32 authCode = 2;
+    string authCode = 2;
+}
+
+message ResVerifyUserWithTokensMSg {
+    string userId = 1;
+    string accessToken = 2;
+    string refreshToken = 3;
 }
 
 message GetMeMsg {

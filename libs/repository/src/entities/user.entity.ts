@@ -28,13 +28,13 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'user_last_name', type: 'varchar', nullable: true, default: null })
   readonly userLastName: Nullable<string>
 
-  @Column({ name: 'email', unique: true, nullable: true, type: 'varchar' })
-  readonly email: Nullable<string>
+  @Column({ name: 'email', unique: true, type: 'varchar' })
+  readonly email: string
 
   @Column({ name: 'password_hash', type: 'varchar' })
   readonly passwordHash: string
 
-  @Column({ name: 'phone_number', unique: true, nullable: true, type: 'varchar' })
+  @Column({ name: 'phone_number', unique: true, nullable: true, type: 'varchar', default: null })
   readonly phoneNumber: Nullable<string>
 
   @Column({ name: 'is_blocked', default: false })

@@ -4,8 +4,6 @@ import { MessagePattern, Payload } from '@nestjs/microservices'
 import {
   GetAllNotificationsByUserIdMsg,
   KafkaNotificationController,
-  ReturnAllNotificationsByUserId,
-  SendAuthCodeMsg,
   SendEmailNotificationMsg,
   SendUserNotificationMsg,
   NotificationMsgPattern,
@@ -28,7 +26,7 @@ export class NotificationsController implements KafkaNotificationController {
   }
 
   @MessagePattern(NotificationMsgPattern.GET_ALL_NOTIFICATIONS)
-  public async getAllNotificationsByUserId(msg: GetAllNotificationsByUserIdMsg) {
+  public async getAllNotificationsByUserId(@Payload() msg: GetAllNotificationsByUserIdMsg) {
     return await this.notificationsService.getAllNotificationsByUserId(msg)
   }
 }

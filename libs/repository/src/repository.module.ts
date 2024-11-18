@@ -45,6 +45,7 @@ export const entities = [
         synchronize: false,
         migrationsTableName: 'migrations',
         autoLoadEntities: true,
+        logging: true,
       }),
     }),
     TypeOrmModule.forFeature(entities),

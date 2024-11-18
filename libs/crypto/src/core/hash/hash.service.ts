@@ -1,8 +1,8 @@
-import crypto from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { HashEncoding, ReturnSaltAndPepper } from '@lib/crypto/types/common'
 import { Injectable } from '@nestjs/common'
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3'
-import bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 import { EncodingService } from '../encoding/encoding.service'
 import { Base58 } from '@libs/core/types/common'
 
@@ -29,16 +29,16 @@ export class HashService {
     return new Promise<ReturnSaltAndPepper>((res, rej) => {
       try {
         userData = this.serializeToRaw(userData)
-        const hash = crypto.createHash('sha256')
+        const hash = createHash('sha256')
         hash.update(userData)
         const hashResult = hash.digest('hex')
 
         const salt = hashResult.substring(0, 16)
         const pepper = hashResult.substring(16)
 
-        return { salt, pepper }
+        res({ salt, pepper })
       } catch (e) {
-        throw e
+        rej(e)
       }
     })
   }
@@ -68,9 +68,9 @@ export class HashService {
   public async verifyHash(
     data: any,
     hash: string,
+    mixes: ReturnSaltAndPepper,
     hashFormat: HashEncoding = 'base58',
   ): Promise<boolean> {
-    const mixes = await this.generateSaltAndPepper(data)
     const newHash = await this.createHash(data, mixes, hashFormat, true)
     const base64Hash = this.decodingBs58ToBs64(hash)
 

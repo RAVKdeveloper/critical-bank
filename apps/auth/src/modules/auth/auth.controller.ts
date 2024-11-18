@@ -1,46 +1,53 @@
 import { Controller } from '@nestjs/common'
 
+import { UUID } from '@libs/core'
+import { Transactional } from '@nestjs-cls/transactional'
+import { MessagePattern, Payload } from '@nestjs/microservices'
+import { Observable } from 'rxjs'
 import {
-  AuthServiceController,
-  AuthServiceControllerMethods,
-  Empty,
+  AuthMsgPattern,
+  RepeatVerifyCodeMsg,
+  KafkaAuthController,
   GetMeMsg,
   LoginMsg,
   RegistrationMsg,
-  RepeatVerificationCodeMsg,
   ResUserMsg,
+  ResVerifyUserWithTokensMSg,
   VerifyAuthCodeMsg,
-} from '@libs/grpc-types'
+} from '@lib/kafka-types'
 
 import { AuthService } from './auth.service'
-import { Observable } from 'rxjs'
 
 @Controller()
-@AuthServiceControllerMethods()
-export class AuthController implements AuthServiceController {
+export class AuthController implements KafkaAuthController {
   constructor(private readonly authService: AuthService) {}
 
-  public async registration(msg: RegistrationMsg): Promise<ResUserMsg> {
+  @MessagePattern(AuthMsgPattern.USER_REGISTRATION)
+  @Transactional()
+  public async registration(@Payload() msg: RegistrationMsg): Promise<ResUserMsg> {
     return await this.authService.registration(msg)
   }
 
-  public login(msg: LoginMsg): ResUserMsg | Promise<ResUserMsg> | Observable<ResUserMsg> {
-    throw new Error('Method not implemented.')
+  @MessagePattern(AuthMsgPattern.USER_LOGIN)
+  public async login(@Payload() msg: LoginMsg): Promise<ResUserMsg> {
+    return await this.authService.login(msg)
   }
 
-  public repeatAuthCode(
-    msg: RepeatVerificationCodeMsg,
-  ): Empty | Promise<Empty> | Observable<Empty> {
-    throw new Error('Method not implemented.')
+  @MessagePattern(AuthMsgPattern.REPEAT_VERIFY_CODE)
+  public async repeatAuthCode(@Payload() msg: RepeatVerifyCodeMsg): Promise<void> {
+    return await this.authService.repeatAuthCode(msg)
   }
 
-  public verifyAuthCode(
-    msg: VerifyAuthCodeMsg,
-  ): ResUserMsg | Promise<ResUserMsg> | Observable<ResUserMsg> {
-    throw new Error('Method not implemented.')
+  @MessagePattern(AuthMsgPattern.USER_VERIFY_AUTH_CODE)
+  @Transactional()
+  public async verifyAuthCode(
+    @Payload() msg: VerifyAuthCodeMsg,
+  ): Promise<ResVerifyUserWithTokensMSg> {
+    return await this.authService.verifyUserLoginAuthCode(msg)
   }
 
-  public me(msg: GetMeMsg): ResUserMsg | Promise<ResUserMsg> | Observable<ResUserMsg> {
-    return this.authService.me(msg.userId)
+  @MessagePattern(AuthMsgPattern.USER_GET_ME)
+  public async me(@Payload() msg: GetMeMsg): Promise<ResUserMsg> {
+    return await this.authService.me(msg.userId as UUID)
   }
 }

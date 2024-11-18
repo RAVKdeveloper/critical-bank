@@ -1,0 +1,37 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Critical Bank - Verification Code</title>
+    <style>
+      body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f2f2f2; } .container
+      { max-width: 600px; margin: 0 auto; padding: 30px; background-color: #fff; border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } h1 { color: #333; text-align: center;
+      margin-bottom: 20px; } p { line-height: 1.6; margin-bottom: 15px; color: #555; } .auth-code {
+      font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 20px; } .button {
+      display: block; width: 100%; padding: 12px 20px; background-color: #007bff; color: #fff;
+      border: none; border-radius: 5px; cursor: pointer; text-align: center; font-weight: bold;
+      text-decoration: none; } .button:hover { opacity: 0.8; }
+    </style>
+  </head>
+  <body>
+
+    <div class='container'>
+      <h1>Critical Bank - Verification Code</h1>
+
+      <p>Hi {{email}},</p>
+
+      <p>We're excited to welcome you to Critical Bank! To complete your registration, please enter
+        the following verification code:</p>
+
+      <div class='auth-code'>
+        {{code}}
+      </div>
+
+      <p>This code will expire in {{expirationTime}} minutes.</p>
+
+      <p>If you did not request this verification code, please ignore this email.</p>
+    </div>
+
+  </body>
+</html>

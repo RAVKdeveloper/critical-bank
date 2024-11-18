@@ -153,7 +153,11 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json",
         "assets": [
-          "notifications/src/**/*.hbs"
+          {
+            "include": "apps/notifications/src/templates",
+            "outDir": "dist/apps/notifications/src/templates",
+            "watchAssets": true
+          }
         ],
         "watchAssets": true
       }
@@ -192,6 +196,24 @@
       "sourceRoot": "libs/crypto/src",
       "compilerOptions": {
         "tsConfigPath": "libs/crypto/tsconfig.lib.json"
+      }
+    },
+    "tokens": {
+      "type": "library",
+      "root": "libs/tokens",
+      "entryFile": "index",
+      "sourceRoot": "libs/tokens/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tokens/tsconfig.lib.json"
+      }
+    },
+    "core-auth": {
+      "type": "library",
+      "root": "libs/core-auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/core-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core-auth/tsconfig.lib.json"
       }
     }
   }

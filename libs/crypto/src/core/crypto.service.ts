@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { HashService } from './hash/hash.service'
 import { EncodingService } from './encoding/encoding.service'
 import { randomBytes, randomUUID } from 'crypto'
+import { EncryptingService } from './encrypting/encrypting.service'
 
 @Injectable()
 export class CryptoService {
   constructor(
     private readonly hashService: HashService,
     private readonly encodingService: EncodingService,
+    private readonly encryptingService: EncryptingService,
   ) {}
 
   public get hash() {
@@ -16,6 +18,10 @@ export class CryptoService {
 
   public get encoding() {
     return this.encodingService
+  }
+
+  public get encrypting() {
+    return this.encryptingService
   }
 
   public get utils() {

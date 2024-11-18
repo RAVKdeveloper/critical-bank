@@ -1,15 +1,13 @@
 import { ConfigService } from '@libs/config'
-import { RepositoryService } from '@libs/repository'
-import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { RepositoryService, UserEntity } from '@libs/repository'
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager'
 import { lastValueFrom } from 'rxjs'
-import { Cache } from 'cache-manager'
 import { ClientKafka } from '@nestjs/microservices'
 import { Inject, Injectable, OnApplicationShutdown, OnModuleInit } from '@nestjs/common'
 import { CryptoService } from '@lib/crypto'
 import { objToString } from '@libs/core'
 import { AUTH_CODE_CACHE_KEY, AUTH_CODE_EX_TIME } from '@libs/constants'
 import type { UUID } from '@libs/core/types'
-import { GrpcPermissionDeniedException } from 'nestjs-grpc-exceptions'
 import { ConfigModel } from '../../config/config.model'
 import {
   AuthServiceMsgBrokerSubsArr,
@@ -23,7 +21,6 @@ import {
 export class AuthCodeService implements OnModuleInit, OnApplicationShutdown {
   constructor(
     @Inject(CACHE_MANAGER) private readonly authCodeCache: Cache,
-    private readonly rep: RepositoryService,
     private readonly cfg: ConfigService<ConfigModel>,
     private readonly cryptoService: CryptoService,
     @Inject(NOTIFICATIONS_SERVICE_NAME) private readonly notificationClient: ClientKafka,
@@ -41,7 +38,7 @@ export class AuthCodeService implements OnModuleInit, OnApplicationShutdown {
     await this.notificationClient.close()
   }
 
-  public async createAndSendAuthCode(userId: UUID): Promise<void> {
+  public async createAndSendAuthCode(userId: UUID, user: UserEntity): Promise<void> {
     const cacheKey = this.getCacheKey(userId)
     let cacheVal: string | undefined = await this.authCodeCache.get(cacheKey)
 
@@ -53,12 +50,16 @@ export class AuthCodeService implements OnModuleInit, OnApplicationShutdown {
     if (cacheKey) {
       await this.authCodeCache.del(cacheKey)
     }
-    await this.authCodeCache.set(cacheKey, cacheVal, { ttl: AUTH_CODE_EX_TIME })
+
+    await this.authCodeCache.set(cacheKey, cacheVal, AUTH_CODE_EX_TIME)
+
+    const objWithEmailAndTgId = this.getSendCredentials(user)
 
     const notificationMsg: SendAuthCodeMsg = {
       userId: userId,
       msgContext: NotificationMsgContext.AUTH_CODE,
       body: randomCode,
+      ...objWithEmailAndTgId,
     }
 
     await lastValueFrom(
@@ -71,19 +72,30 @@ export class AuthCodeService implements OnModuleInit, OnApplicationShutdown {
     const cacheVal: string | undefined = await this.authCodeCache.get(cacheKey)
 
     if (!cacheVal) {
-      throw new GrpcPermissionDeniedException(objToString({ userId, authCode }))
+      return false
     }
 
     const hashFromNewCode = await this.cryptoService.hash.lightHash(authCode, 'base58')
 
     if (hashFromNewCode !== cacheVal) {
-      throw new GrpcPermissionDeniedException(objToString({ userId, authCode }))
+      return false
     }
 
     return true
   }
 
-  public async repeatAuthCode(): Promise<void> {}
+  private getSendCredentials(user: UserEntity) {
+    const obj: Record<string, string | number> = {
+      email: undefined,
+      tgId: undefined,
+    }
+
+    if (user.email) obj.email = user.email
+
+    if (user.tgId) obj.tgId = user.tgId
+
+    return obj
+  }
 
   private genRandomCode(length: number): string {
     let code = ''

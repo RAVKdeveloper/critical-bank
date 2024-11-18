@@ -5,11 +5,11 @@ import {
   DeleteDateColumn,
 } from 'typeorm'
 
-import { Nullable } from '@libs/core'
+import { Nullable, UUID } from '@libs/core'
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  readonly id: string
+  readonly id: UUID
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   readonly createdAt: Date

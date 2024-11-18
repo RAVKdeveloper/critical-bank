@@ -1,19 +1,46 @@
 import { Module } from '@nestjs/common'
+import { Transport } from '@nestjs/microservices'
 
-import { GrpcClientModule } from '@lib/micro-clients'
-import { GrpcPackage, AUTH_SERVICE_NAME } from '@libs/grpc-types'
+import { ConfigService, ConfigModule } from '@libs/config'
+import { KafkaClientModule } from '@lib/micro-clients'
+import { Partitioners } from 'kafkajs'
+import { AUTH_CLIENT_ID, AUTH_CONSUMER, AUTH_SERVICE_NAME } from '@lib/kafka-types'
 
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
+import { ConfigModel } from '../../config/config.model'
 
 @Module({
   imports: [
-    GrpcClientModule.register({
-      serviceName: AUTH_SERVICE_NAME,
-      package: GrpcPackage.AUTH,
-      protoPath: '../auth.proto',
-      url: 'localhost:3030',
-    }),
+    ConfigModule,
+    KafkaClientModule.registerAsync([
+      {
+        clients: [
+          {
+            inject: [ConfigService],
+            useFactory: ({ env }: ConfigService<ConfigModel>) => {
+              return {
+                transport: Transport.KAFKA,
+                name: AUTH_SERVICE_NAME,
+                options: {
+                  client: {
+                    clientId: AUTH_CLIENT_ID,
+                    brokers: env.KAFKA_BROKERS_ARRAY as string[],
+                  },
+                  consumer: {
+                    groupId: AUTH_CONSUMER,
+                  },
+                  producer: {
+                    createPartitioner: Partitioners.LegacyPartitioner,
+                  },
+                },
+              }
+            },
+            name: AUTH_SERVICE_NAME,
+          },
+        ],
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService],

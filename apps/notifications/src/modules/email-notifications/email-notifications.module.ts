@@ -36,7 +36,7 @@ import { RateLimiterModule } from '@lib/rate-limiter'
             options: {
               strict: true,
             },
-            dir: join(__dirname, 'templates'),
+            dir: join(__dirname, 'templates/notifications/src/templates'),
           },
         }
       },

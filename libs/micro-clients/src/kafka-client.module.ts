@@ -1,4 +1,4 @@
-import { DynamicModule, Global, Module, Provider } from '@nestjs/common'
+import { DynamicModule, Global, Module, OnApplicationShutdown, Provider } from '@nestjs/common'
 import {
   ClientsModule,
   Transport,
@@ -32,7 +32,7 @@ export class KafkaClientModule {
             },
           ]),
         ],
-        exports: [ClientsModule],
+        exports: [ClientsModule, params.serviceName],
       }
     } else {
       const clients = params.map(param => ({
@@ -57,51 +57,11 @@ export class KafkaClientModule {
     }
   }
 
-  static registerAsync(params: {
-    useFactory: (...args: any[]) => Promise<KafkaModuleParams> | KafkaModuleParams
-    inject?: any[]
-  }): DynamicModule {
-    const asyncProviders = this.createAsyncProvider(params)
-
+  static registerAsync(options: ClientsModuleAsyncOptions[]): DynamicModule {
     return {
       module: KafkaClientModule,
-      imports: [ClientsModule],
-      providers: asyncProviders,
+      imports: [...options.map(opt => ClientsModule.registerAsync(opt))],
       exports: [ClientsModule],
     }
-  }
-
-  private static createAsyncProvider(params: {
-    useFactory: (...args: any[]) => Promise<KafkaModuleParams> | KafkaModuleParams
-    inject?: any[]
-  }): Provider[] {
-    return [
-      {
-        provide: 'KAFKA_MODULE_PARAMS',
-        useFactory: params.useFactory,
-        inject: params.inject || [],
-      },
-      // {
-      //   provide: 'KAFKA_MODULE_PARAMS',
-      //   useFactory: async (kafkaParams: KafkaModuleParams) => {
-      //     return [
-      //       {
-      //         name: kafkaParams.serviceName,
-      //         transport: Transport.KAFKA,
-      //         options: {
-      //           client: {
-      //             clientId: kafkaParams.clientId,
-      //             brokers: kafkaParams.brokers,
-      //           },
-      //           consumer: {
-      //             groupId: kafkaParams.groupId,
-      //           },
-      //         },
-      //       },
-      //     ]
-      //   },
-      //   inject: ['KAFKA_MODULE_PARAMS'],
-      // },
-    ]
   }
 }

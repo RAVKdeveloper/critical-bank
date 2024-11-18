@@ -1,24 +1,36 @@
 import { join } from 'path'
 import { NestFactory } from '@nestjs/core'
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices'
+import { Partitioners } from 'kafkajs'
 
-import { GrpcPackage } from '@libs/grpc-types'
 import { CustomLogger } from '@lib/logger'
+import { loadEnvironment } from '@libs/config'
+import { AUTH_CLIENT_ID, AUTH_CONSUMER } from '@lib/kafka-types'
 
 import { AuthAppModule } from './app.module'
+import { ConfigModel } from './config/config.model'
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AuthAppModule, {
-    transport: Transport.GRPC,
+  const config = loadEnvironment(ConfigModel)
+
+  const kafkaApp = await NestFactory.createMicroservice<MicroserviceOptions>(AuthAppModule, {
+    transport: Transport.KAFKA,
     options: {
-      package: GrpcPackage.AUTH,
-      protoPath: join(__dirname, '../auth.proto'),
-      url: 'localhost:3030',
+      client: {
+        clientId: AUTH_CLIENT_ID,
+        brokers: config.AUTH_SERVICE_KAFKA_BROKERS_ARRAY,
+      },
+      consumer: {
+        groupId: AUTH_CONSUMER,
+      },
+      producer: {
+        createPartitioner: Partitioners.LegacyPartitioner,
+      },
     },
   })
 
-  app.useLogger(app.get(CustomLogger))
+  kafkaApp.useLogger(kafkaApp.get(CustomLogger))
 
-  await app.listen()
+  await kafkaApp.listen()
 }
 bootstrap()

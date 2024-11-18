@@ -8,11 +8,12 @@
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
 import { Empty, UserEntity } from './entities'
+import { UUID } from '@libs/core'
 
 export const protobufPackageAuth = 'auth'
 
 export interface RegistrationMsg {
-  email?: string | undefined
+  email: string | undefined
   phoneNumber?: string | undefined
   tgId?: number | undefined
   userName: string
@@ -24,25 +25,27 @@ export interface RegistrationMsg {
 export interface LoginMsg {
   email?: string | undefined
   phoneNumber?: string | undefined
-}
-
-export interface RepeatVerificationCodeMsg {
-  email?: string | undefined
-  phoneNumber?: string | undefined
+  password: string
 }
 
 export interface VerifyAuthCodeMsg {
-  userId: string
-  authCode: number
+  userId: UUID
+  authCode: string
 }
 
 export interface GetMeMsg {
-  userId: string
+  userId: UUID
 }
 
 export interface ResUserMsg {
   user: UserEntity | undefined
   timestamp: number
+}
+
+export interface ResVerifyUserWithTokensMSg {
+  userId: string
+  accessToken: string
+  refreshToken: string
 }
 
 export const AUTH_PACKAGE_NAME = 'auth'
@@ -51,8 +54,6 @@ export interface AuthServiceClient {
   registration(request: RegistrationMsg): Observable<ResUserMsg>
 
   login(request: LoginMsg): Observable<ResUserMsg>
-
-  repeatAuthCode(request: RepeatVerificationCodeMsg): Observable<Empty>
 
   verifyAuthCode(request: VerifyAuthCodeMsg): Observable<ResUserMsg>
 
@@ -64,24 +65,14 @@ export interface AuthServiceController {
 
   login(request: LoginMsg): Promise<ResUserMsg> | Observable<ResUserMsg> | ResUserMsg
 
-  repeatAuthCode(request: RepeatVerificationCodeMsg): Promise<Empty> | Observable<Empty> | Empty
-
-  verifyAuthCode(
-    request: VerifyAuthCodeMsg,
-  ): Promise<ResUserMsg> | Observable<ResUserMsg> | ResUserMsg
+  verifyAuthCode(request: VerifyAuthCodeMsg): Promise<ResVerifyUserWithTokensMSg>
 
   me(request: GetMeMsg): Promise<ResUserMsg> | Observable<ResUserMsg> | ResUserMsg
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = [
-      'registration',
-      'login',
-      'repeatAuthCode',
-      'verifyAuthCode',
-      'me',
-    ]
+    const grpcMethods: string[] = ['registration', 'login', 'verifyAuthCode', 'me']
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method)
       GrpcMethod('AuthService', method)(constructor.prototype[method], method, descriptor)

@@ -1,25 +1,10 @@
+import { arrayTransformer } from '@libs/core'
 import { Transform } from 'class-transformer'
-import { IsEmail, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsArray, IsEmail, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
 export class ConfigModel {
   @IsString()
   LOKI_ENDPOINT: string
-
-  @IsString()
-  DB_NAME: string
-
-  @IsString()
-  DB_HOST: string
-
-  @IsString()
-  DB_USERNAME: string
-
-  @IsString()
-  DB_PASSWORD: string
-
-  @IsNumber()
-  @Transform(p => Number(p.value))
-  DB_PORT: number
 
   @IsNumber()
   @Transform(p => Number(p.value))
@@ -39,4 +24,8 @@ export class ConfigModel {
   @IsString()
   @IsUrl()
   CLIENT_URL?: string
+
+  @Transform(arrayTransformer)
+  @IsArray()
+  KAFKA_BROKERS_ARRAY: string[]
 }

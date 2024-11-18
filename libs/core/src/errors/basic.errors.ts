@@ -1,6 +1,7 @@
 import { HttpStatus } from '@nestjs/common'
 import { BaseError, ErrorOptions } from './errors.core'
 import { objToString } from '../utils'
+import { UUID } from '../types'
 
 export class InternalServerError<E> extends BaseError<E> {
   constructor(error: E, options?: Omit<ErrorOptions, 'status'>) {
@@ -29,5 +30,17 @@ export class ForbiddenError extends BaseError<'forbiddenError'> {
 export class RateLimiterError extends BaseError<'rateLimiterError'> {
   constructor(error: any) {
     super('rateLimiterError', { message: objToString({ error }) })
+  }
+}
+
+export class NotFoundUserError extends BaseError<'notFoundUserError'> {
+  constructor(userId: string) {
+    super('notFoundUserError', { message: objToString({ userId }), status: HttpStatus.NOT_FOUND })
+  }
+}
+
+export class UserIsBlockedError extends BaseError<'userIsBlockedError'> {
+  constructor(userId: string) {
+    super('userIsBlockedError', { message: objToString({ userId }), status: HttpStatus.FORBIDDEN })
   }
 }

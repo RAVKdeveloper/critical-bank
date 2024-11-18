@@ -1,0 +1,8 @@
+export interface TokensJwtEnvsModel {
+  ACCESS_SECRET_KEY: string
+  ACCESS_EXPIRATION_TIME: string
+  REFRESH_SECRET_KEY: string
+  REFRESH_EXPIRATION_TIME: string
+  REFRESH_TOKEN_ENCRYPT_KEY: string
+  ACCESS_TOKEN_ENCRYPT_KEY: string
+}

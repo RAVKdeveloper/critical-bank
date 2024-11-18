@@ -18,7 +18,6 @@ import { GrafanaModuleOptions } from '@lib/loki/types/module.types'
   imports: [
     CacheDatabaseModule,
     ConfigModule,
-    RepositoryModule,
     AuthModule,
     CustomLoggerModule,
     GrafanaModule.forRootAsync({

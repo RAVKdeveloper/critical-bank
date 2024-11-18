@@ -1,36 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
-import { AuthService } from './auth.service'
-import { CreateAuthDto } from './dto/create-auth.dto'
-import { UpdateAuthDto } from './dto/update-auth.dto'
+import { Controller, Post, Body, UseInterceptors } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { makeResponse } from '@libs/core'
-import { identity } from 'rxjs'
+import { identity } from 'ramda'
 
-@Controller('auth')
+import { AuthService } from './auth.service'
+
+import { UserRegistrationDto } from './dto/registration.dto'
+
+@ApiTags('Auth')
+@Controller({ path: 'auth' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto)
-  }
-
-  @Get()
-  findAll() {
-    return makeResponse(this.authService.findAll(), identity)
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id)
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id)
+  @Post('/sign-up')
+  public async signUp(@Body() dto: UserRegistrationDto) {
+    const data = await this.authService.signUp(dto)
+    return makeResponse(data, identity)
   }
 }

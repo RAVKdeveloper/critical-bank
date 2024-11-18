@@ -19,18 +19,19 @@ export class CustomLogger extends PinoLogger {
     service?: string,
   ) {
     try {
-      await this.lokiService.push({
-        key: level,
-        method: `service - ${service}`,
-        path: service,
-        status: 0,
-        timestamp: new Date(),
-        type: 'application',
-        time: 0,
-        userId,
-      })
+      // await this.lokiService.push({
+      //   key: level,
+      //   method: `service - ${service}`,
+      //   path: service,
+      //   status: 0,
+      //   timestamp: new Date(),
+      //   type: 'application',
+      //   time: 0,
+      //   userId,
+      // })
+      this.logger.info({ level, message, data, userId, service })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw error
     }
   }

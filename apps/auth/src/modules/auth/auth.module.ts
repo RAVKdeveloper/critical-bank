@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { Transport } from '@nestjs/microservices'
 
 import { RepositoryModule } from '@libs/repository'
 import { CacheDatabaseModule } from '@libs/cache'
@@ -11,6 +12,7 @@ import {
   NOTIFICATIONS_SERVICE_NAME,
   NOTIFICATION_CONSUMER,
 } from '@lib/kafka-types'
+import { TokensModule } from '@lib/tokens'
 
 import { ConfigModule } from '../../config/config.module'
 
@@ -26,18 +28,33 @@ import { AuthCodeModule } from '../auth-code/auth-code.module'
     CacheDatabaseModule,
     CustomLoggerModule,
     CryptoModule,
-    KafkaClientModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: ({ env }: ConfigService<ConfigModel>) => {
-        return {
-          brokers: env.KAFKA_BROKERS_ARRAY as string[],
-          serviceName: NOTIFICATIONS_SERVICE_NAME,
-          clientId: NOTIFICATIONS_CLIENT_ID,
-          groupId: NOTIFICATION_CONSUMER,
-        }
+    KafkaClientModule.registerAsync([
+      {
+        clients: [
+          {
+            inject: [ConfigService],
+            useFactory: ({ env }: ConfigService<ConfigModel>) => {
+              return {
+                transport: Transport.KAFKA,
+                name: NOTIFICATIONS_SERVICE_NAME,
+                options: {
+                  client: {
+                    clientId: NOTIFICATIONS_CLIENT_ID,
+                    brokers: env.KAFKA_BROKERS_ARRAY as string[],
+                  },
+                  consumer: {
+                    groupId: NOTIFICATION_CONSUMER,
+                  },
+                },
+              }
+            },
+            name: NOTIFICATIONS_SERVICE_NAME,
+          },
+        ],
       },
-    }),
+    ]),
     AuthCodeModule,
+    TokensModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

@@ -77,7 +77,9 @@ export class NotificationsService {
     if (msg.msgContext === NotificationMsgContext.LOGIN) {
       const location = this.parseDeviceAndIpFromOther(msg.other.body)
 
-      await this.emailNotifications.sendLogin({ to: msg.email }, location.device, location.ip)
+      if (msg.email) {
+        await this.emailNotifications.sendLogin({ to: msg.email }, location.device, location.ip)
+      }
 
       if (msg.tgId) {
         await this.tgNotifications.sendLogin(msg.tgId, location.device, location.ip)

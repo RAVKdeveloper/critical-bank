@@ -1,11 +1,13 @@
 import { HashEncoding, OtherLibEncoding } from '@lib/crypto/types/common'
 import { Injectable } from '@nestjs/common'
+import { utf8ToBytes, bytesToUtf8 } from '@noble/ciphers/utils'
 import bs58 from 'bs58'
 
 @Injectable()
 export class EncodingService {
   private readonly libFormats: Record<OtherLibEncoding, Function[]> = {
     base58: [bs58.encode, bs58.decode],
+    'utf-8': [utf8ToBytes, bytesToUtf8],
   }
 
   public encoding<T extends string>(data: Uint8Array, format: HashEncoding): T {

@@ -18,6 +18,15 @@ export class BaseError<E> {
     this.message = options?.message
     this.status = options?.status ?? 200
   }
+
+  public toJSON() {
+    return JSON.stringify({
+      error: this.error,
+      message: this.message,
+      status: this.status,
+      payload: typeof this.payload === 'object' ? JSON.stringify(this.payload) : this.payload,
+    })
+  }
 }
 
 export function isError<T, E, BE extends BaseError<E>>(value: T | BE): value is BE {
