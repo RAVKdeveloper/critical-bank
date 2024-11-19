@@ -6,10 +6,11 @@ on:
 
 env:
   DOCKER_IMAGE_NAME: ravkdeveloper/critical-bank-apigateway
-  REMOTE_HOST: root@5.35.5.106
+  REMOTE_HOST: 5.35.5.106
   REMOTE_PORT: 22
   DEPLOY_DIRECTORY: ~/projects/critical-bank
   BUILD_DIRECTORY: ./docker/apigateway.Dockerfile
+  REMOTE_USERNAME: root
 
 jobs:
   prepare_envs:
@@ -24,7 +25,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-    # needs: [prepare_envs]
+    needs: [prepare_envs]
     steps:
       - name: 'Cleanup build folder'
         run: |
@@ -43,10 +44,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Show directory files
-        working-directory: ./
-        run: ls -a
-
       - name: Build Docker image
         working-directory: ./
         run: docker build . -f ${{ env.BUILD_DIRECTORY }} -t ${{ env.DOCKER_IMAGE_NAME }}:latest
@@ -61,6 +58,7 @@ jobs:
           host: ${{ env.REMOTE_HOST }}
           port: ${{ env.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.REMOTE_USERNAME }}
 
       - name: Pull Docker image on remote server
         uses: appleboy/ssh-action@master
@@ -68,6 +66,7 @@ jobs:
           host: ${{ env.REMOTE_HOST }}
           port: ${{ env.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.REMOTE_USERNAME }}
           script: |
             cd ${{ env.DEPLOY_DIRECTORY }}
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
@@ -78,6 +77,7 @@ jobs:
           host: ${{ env.REMOTE_HOST }}
           port: ${{ env.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.REMOTE_USERNAME }}
           script: |
             cd ${{ env.DEPLOY_DIRECTORY }}
             docker stop critical-bank-apigateway || true
@@ -89,6 +89,7 @@ jobs:
           host: ${{ env.REMOTE_HOST }}
           port: ${{ env.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.REMOTE_USERNAME }}
           script: |
             cd ${{ env.DEPLOY_DIRECTORY }}
             sudo docker-compose -f ./docker/apigateway.docker-compose.yml --env-file ./envs/apigateway.env up -d --build
