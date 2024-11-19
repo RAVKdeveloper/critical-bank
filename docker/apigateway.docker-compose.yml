@@ -3,9 +3,7 @@ version: '3.1'
 services:
   apigateway:
     container_name: critical-bank-apigateway
-    build:
-      dockerfile: ./docker/apigateway.Dockerfile
-      context: ../
+    image: ravkdeveloper/critical-bank-apigateway:latest
     volumes:
       - .:/usr/src/app
     env_file:

@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer'
-import { IsEmail, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsArray, IsEmail, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
-import { numTransformer } from '@libs/core'
+import { arrayTransformer, numTransformer } from '@libs/core'
 
 export class ConfigModel {
   @IsString()
@@ -28,4 +28,8 @@ export class ConfigModel {
 
   @IsEmail()
   EMAIL_SENDER: string
+
+  @Transform(arrayTransformer)
+  @IsArray()
+  KAFKA_BROKERS_ARRAY: string[]
 }

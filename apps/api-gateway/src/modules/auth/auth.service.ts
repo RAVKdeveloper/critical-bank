@@ -22,13 +22,8 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
   }
 
   public async signUp(dto: UserRegistrationDto) {
-    try {
-      const result = await lastValueFrom(this.client.send(AuthMsgPattern.USER_REGISTRATION, dto))
+    const result = await lastValueFrom(this.client.send(AuthMsgPattern.USER_REGISTRATION, dto))
 
-      return result
-    } catch (e) {
-      console.log(e)
-      return e.message
-    }
+    return result
   }
 }

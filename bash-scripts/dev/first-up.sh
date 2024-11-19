@@ -19,18 +19,18 @@ sudo docker compose -f ./docker/pg.docker-compose.yml --env-file ./envs/typeorm.
 
 echo "Start mongodb"
 
-sudo docker compose -f ./docker/mongo.docker-compose.yml --env-file ./envs/mongo.env up -d
+sudo docker-compose -f ./docker/mongo.docker-compose.yml --env-file ./envs/mongo.env up -d
 
 echo "Start kafka"
 
-sudo docker compose -f ./docker/msg-broker.docker-compose.yml up -d
+sudo docker-compose -f ./docker/msg-broker.docker-compose.yml up -d
 
 echo "Start logging system"
 
 docker volume create prometheus_data
 docker volume create critical-grafana
 
-sudo docker compose -f ./docker/logs.docker-compose.yml --env-file ./envs/logs.env up -d
+sudo docker-compose -f ./docker/logs.docker-compose.yml --env-file ./envs/logs.env up -d
 
 echo "Start Microservices!!!"
 

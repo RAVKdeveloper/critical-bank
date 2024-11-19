@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { MessagePattern, Payload, EventPattern } from '@nestjs/microservices'
 
 import {
   GetAllNotificationsByUserIdMsg,
@@ -15,12 +15,12 @@ import { NotificationsService } from './notifications.service'
 export class NotificationsController implements KafkaNotificationController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @MessagePattern(NotificationMsgPattern.BASIC_SEND_NOTIFICATION)
+  @EventPattern(NotificationMsgPattern.BASIC_SEND_NOTIFICATION)
   public async sendBasicNotification(@Payload() msg: SendUserNotificationMsg) {
     return await this.notificationsService.prepareMessageToSendBasic(msg)
   }
 
-  @MessagePattern(NotificationMsgPattern.EMAIL_SEND_NOTIFICATION)
+  @EventPattern(NotificationMsgPattern.EMAIL_SEND_NOTIFICATION)
   public async sendEmailNotification(@Payload() msg: SendEmailNotificationMsg) {
     return await this.notificationsService.sendEmailNotification(msg)
   }

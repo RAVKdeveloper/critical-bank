@@ -2,6 +2,7 @@ import { KafkaClientModule } from '@lib/micro-clients'
 import { CacheDatabaseModule } from '@libs/cache'
 import { ConfigModule, ConfigService } from '@libs/config'
 import { Module } from '@nestjs/common'
+import { Partitioners } from 'kafkajs'
 import {
   NOTIFICATIONS_CLIENT_ID,
   NOTIFICATIONS_SERVICE_NAME,
@@ -32,6 +33,9 @@ import { Transport } from '@nestjs/microservices'
                   },
                   consumer: {
                     groupId: NOTIFICATION_CONSUMER,
+                  },
+                  producer: {
+                    createPartitioner: Partitioners.LegacyPartitioner,
                   },
                 },
               }

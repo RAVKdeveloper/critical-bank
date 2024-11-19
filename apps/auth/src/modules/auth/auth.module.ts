@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { Transport } from '@nestjs/microservices'
+import { Partitioners } from 'kafkajs'
 
 import { RepositoryModule } from '@libs/repository'
 import { CacheDatabaseModule } from '@libs/cache'
@@ -44,6 +45,9 @@ import { AuthCodeModule } from '../auth-code/auth-code.module'
                   },
                   consumer: {
                     groupId: NOTIFICATION_CONSUMER,
+                  },
+                  producer: {
+                    createPartitioner: Partitioners.LegacyPartitioner,
                   },
                 },
               }

@@ -62,9 +62,7 @@ export class AuthCodeService implements OnModuleInit, OnApplicationShutdown {
       ...objWithEmailAndTgId,
     }
 
-    await lastValueFrom(
-      this.notificationClient.send(NotificationMsgPattern.BASIC_SEND_NOTIFICATION, notificationMsg),
-    )
+    this.notificationClient.emit(NotificationMsgPattern.BASIC_SEND_NOTIFICATION, notificationMsg)
   }
 
   public async verifyAuthCode(userId: UUID, authCode: string): Promise<boolean> {
