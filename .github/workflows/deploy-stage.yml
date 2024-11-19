@@ -45,7 +45,7 @@ jobs:
 
       - name: Show directory files
         working-directory: ./
-        run: cd ${{ env.BUILD_DIRECTORY }} && ls -a
+        run: ls -a
 
       - name: Build Docker image
         working-directory: ./
