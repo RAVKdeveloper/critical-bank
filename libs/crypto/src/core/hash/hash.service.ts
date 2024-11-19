@@ -48,6 +48,7 @@ export class HashService {
     mixes: ReturnSaltAndPepper,
     encoding: HashEncoding = 'base58',
     onlyKeccak = false,
+    onlyBcryptFormat = true,
   ) {
     const bytesFromMsg = this.serializeToRaw(data)
     const salt = Uint8Array.from(Buffer.from(mixes.salt))
@@ -62,7 +63,9 @@ export class HashService {
     const encodingKeccakHash = this.encodingService.encoding(keccakHash, encoding)
     const finalHash = await bcrypt.hash(encodingKeccakHash, 12)
 
-    return this.encodingService.encoding(Uint8Array.from(Buffer.from(finalHash)), encoding)
+    return onlyBcryptFormat
+      ? finalHash
+      : this.encodingService.encoding(Uint8Array.from(Buffer.from(finalHash)), encoding)
   }
 
   public async verifyHash(
@@ -72,15 +75,10 @@ export class HashService {
     hashFormat: HashEncoding = 'base58',
   ): Promise<boolean> {
     const newHash = await this.createHash(data, mixes, hashFormat, true)
-    const base64Hash = this.decodingBs58ToBs64(hash)
 
-    const isValidHash = await bcrypt.compare(newHash, base64Hash)
+    const isValidHash = await bcrypt.compare(newHash, hash)
 
     return isValidHash
-  }
-
-  private decodingBs58ToBs64(data: Base58, encoding: HashEncoding = 'base58') {
-    return this.encodingService.encoding(this.encodingService.decoding(data, encoding), 'base64')
   }
 
   private serializeToRaw(data: any): Uint8Array {

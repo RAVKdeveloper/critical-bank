@@ -1,9 +1,16 @@
 import { Inject, Injectable, OnApplicationShutdown, OnModuleInit } from '@nestjs/common'
 import { ClientKafka } from '@nestjs/microservices'
 import { lastValueFrom } from 'rxjs'
+import { UUID } from '@libs/core'
 
 import { UserRegistrationDto } from './dto/registration.dto'
-import { AuthServiceMsgBrokerSubsArr, AuthMsgPattern, AUTH_SERVICE_NAME } from './broker-subs'
+import {
+  AuthServiceMsgBrokerSubsArr,
+  AuthMsgPattern,
+  AUTH_SERVICE_NAME,
+  GetMeMsg,
+} from './broker-subs'
+import { LoginUserDto } from './dto/login-user.dto'
 
 @Injectable()
 export class AuthService implements OnModuleInit, OnApplicationShutdown {
@@ -25,5 +32,19 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
     const result = await lastValueFrom(this.client.send(AuthMsgPattern.USER_REGISTRATION, dto))
 
     return result
+  }
+
+  public async login(dto: LoginUserDto) {
+    const result = await lastValueFrom(this.client.send(AuthMsgPattern.USER_LOGIN, dto))
+
+    return result
+  }
+
+  public async me(userId: UUID) {
+    const user = await lastValueFrom(
+      this.client.send(AuthMsgPattern.USER_GET_ME, { userId } satisfies GetMeMsg),
+    )
+
+    return user
   }
 }

@@ -14,6 +14,7 @@ import { GrafanaModule, LokiHttpExceptionFilter } from '@lib/loki'
 import { ConfigService } from '@libs/config'
 import { ConfigModel } from './config/config.model'
 import { GrafanaModuleOptions } from '@lib/loki/types/module.types'
+import { CoreAuthModule } from '@lib/core-auth'
 @Module({
   imports: [
     CacheDatabaseModule,
@@ -27,6 +28,7 @@ import { GrafanaModuleOptions } from '@lib/loki/types/module.types'
       }),
     }),
     PrometheusModule.register(),
+    CoreAuthModule,
   ],
   providers: [
     {

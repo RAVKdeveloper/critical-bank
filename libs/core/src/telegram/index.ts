@@ -7,6 +7,8 @@ export class ContextUser {
   id: number
 }
 
+export type NotTg = undefined
+
 export class ContextTelegramUser {
   @Expose()
   @IsNumber()

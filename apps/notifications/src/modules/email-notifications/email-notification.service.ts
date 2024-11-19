@@ -27,7 +27,11 @@ export class EmailNotificationService implements NotificationInterface {
       to: dto.to,
       subject: dto.subject ?? 'Verification code',
       template: './auth-code',
-      context: dto.context ?? { email: dto.to, code, expirationTime: AUTH_CODE_EX_TIME },
+      context: dto.context ?? {
+        email: dto.to,
+        code,
+        expirationTime: AUTH_CODE_EX_TIME / 1000 / 60,
+      },
     }
 
     await this.send(msg)

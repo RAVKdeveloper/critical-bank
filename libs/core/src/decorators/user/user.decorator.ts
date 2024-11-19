@@ -1,3 +1,4 @@
+import { RequestHeaders } from '@libs/constants'
 import { AppUser } from '@libs/core/types/user'
 import { ExecutionContext, createParamDecorator } from '@nestjs/common'
 
@@ -8,7 +9,7 @@ interface UserData {
 const getUser = (data: UserData, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest()
   const user = {
-    id: request.user.id,
+    id: request[RequestHeaders.USER].id,
     tgUser: undefined,
   }
 
@@ -19,4 +20,4 @@ const getUser = (data: UserData, ctx: ExecutionContext) => {
   return user as AppUser
 }
 
-export const User = () => createParamDecorator(getUser)
+export const User = createParamDecorator(getUser)

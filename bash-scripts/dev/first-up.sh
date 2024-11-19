@@ -23,7 +23,7 @@ sudo docker-compose -f ./docker/mongo.docker-compose.yml --env-file ./envs/mongo
 
 echo "Start kafka"
 
-sudo docker-compose -f ./docker/msg-broker.docker-compose.yml --env-file ./envs/msg-broker.env up -d
+sudo docker compose -f ./docker/msg-broker.docker-compose.yml --env-file ./envs/msg-broker.env up -d
 
 echo "Start logging system"
 
@@ -36,4 +36,4 @@ echo "Start Microservices!!!"
 
 echo "Start apigateway"
 
-sudo docker compose -f ./docker/apigateway.docker-compose.yml --env-file ./envs/apigateway.env up -d --build
+sudo docker-compose -f ./docker/apigateway.docker-compose.yml --env-file ./envs/apigateway.env up -d --build

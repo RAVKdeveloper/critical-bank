@@ -29,6 +29,7 @@ export class AuthController implements KafkaAuthController {
   }
 
   @MessagePattern(AuthMsgPattern.USER_LOGIN)
+  @Transactional()
   public async login(@Payload() msg: LoginMsg): Promise<ResUserMsg> {
     return await this.authService.login(msg)
   }

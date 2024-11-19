@@ -15,7 +15,7 @@ export class UserRegistrationDto implements RegistrationMsg {
   @IsEmail()
   readonly email: string
 
-  @ApiProperty({ example: '+79494383050', required: false })
+  @ApiProperty({ example: '+79323454550', required: false })
   @IsOptional()
   @IsPhoneNumber()
   readonly phoneNumber?: string
