@@ -13,14 +13,14 @@ env:
 
 jobs:
   prepare_envs:
-    runs-on: critical-1
+    runs-on: self-hosted
     steps:
       - name: Make envs
         run: echo "sha=$(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
     outputs:
       sha: ${{ env.sha }}
   build-and-deploy:
-    runs-on: critical-1
+    runs-on: self-hosted
     needs: [prepare_envs]
     steps:
       - name: 'Cleanup build folder'
