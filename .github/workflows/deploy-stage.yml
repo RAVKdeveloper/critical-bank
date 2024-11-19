@@ -9,15 +9,27 @@ env:
   REMOTE_HOST: root@5.35.5.106
   REMOTE_PORT: 22
   DEPLOY_DIRECTORY: ~/projects/critical-bank
-  BUILD_DIRECTORY: ~/projects/critical-bank/docker/apigateway.Dockerfile
+  BUILD_DIRECTORY: ./docker/apigateway.Dockerfile
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
+  prepare_envs:
+    runs-on: self-hosted
     steps:
+      - name: Make envs
+        run: echo "sha=$(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
+    outputs:
+      sha: ${{ env.sha }}
+  build-and-deploy:
+    runs-on: self-hosted
+    needs: [prepare_envs]
+    steps:
+      - name: 'Cleanup build folder'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
       - uses: actions/checkout@v3
-
       - name: Echo secrets
         run: echo ${{ secrets.DOCKERHUB_USERNAME }} && echo ${{ secrets.DOCKERHUB_PASSWORD }}
 
@@ -29,9 +41,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Show directory files
+        working-directory: ./
         run: cd ${{ env.BUILD_DIRECTORY }} && ls -a
 
       - name: Build Docker image
+        working-directory: ./
         run: docker build . -f ${{ env.BUILD_DIRECTORY }} -t ${{ env.DOCKER_IMAGE_NAME }}:latest .
 
       - name: Push Docker image to Docker Hub
