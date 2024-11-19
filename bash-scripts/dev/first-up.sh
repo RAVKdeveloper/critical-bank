@@ -23,7 +23,7 @@ sudo docker-compose -f ./docker/mongo.docker-compose.yml --env-file ./envs/mongo
 
 echo "Start kafka"
 
-sudo docker compose -f ./docker/msg-broker.docker-compose.yml --env-file ./envs/msg-broker.env up -d
+sudo docker-compose -f ./docker/msg-broker.docker-compose.yml --env-file ./envs/msg-broker.env up -d
 
 echo "Start logging system"
 
