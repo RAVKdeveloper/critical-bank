@@ -14,14 +14,14 @@ env:
 
 jobs:
   prepare_envs:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Make envs
         run: echo "sha=$(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
     outputs:
       sha: ${{ env.sha }}
   build-and-deploy:
-    runs-on: self-hosted #ubuntu-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20.x]
