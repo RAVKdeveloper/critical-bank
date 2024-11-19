@@ -8,7 +8,7 @@ env:
   DOCKER_IMAGE_NAME: ravkdeveloper/critical-bank-apigateway
   REMOTE_HOST: 5.35.5.106
   REMOTE_PORT: 22
-  DEPLOY_DIRECTORY: ~/projects/critical-bank
+  DEPLOY_DIRECTORY: ~/project/critical-bank
   BUILD_DIRECTORY: ./docker/apigateway.Dockerfile
   REMOTE_USERNAME: root
 
