@@ -20,4 +20,7 @@ export class CardLimitsEntity extends BaseEntity {
 
   @Column({ name: 'limit_percent_per_tx', type: 'float4' })
   readonly limitPercentPerTx: number
+
+  @Column({ name: 'is_can_by_online_purchases', type: 'boolean', default: true })
+  readonly isCanBuyOnlinePurchases: boolean
 }

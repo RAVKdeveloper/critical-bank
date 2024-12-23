@@ -38,6 +38,10 @@ import { RateLimiterModule } from '@lib/rate-limiter'
             },
             dir: join(__dirname, 'templates/notifications/src/templates'),
           },
+          tls: {
+            rejectUnauthorized: false,
+            ciphers: 'DEFAULT@SECLEVEL=0',
+          },
         }
       },
     }),

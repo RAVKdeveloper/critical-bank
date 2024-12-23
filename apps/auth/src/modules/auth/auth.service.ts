@@ -1,19 +1,20 @@
 import { Inject, Injectable, OnModuleInit, OnApplicationShutdown } from '@nestjs/common'
-import {
-  GrpcNotFoundException,
-  GrpcInvalidArgumentException,
-  GrpcPermissionDeniedException,
-} from 'nestjs-grpc-exceptions'
 import { omit } from 'ramda'
 
 import { RepositoryService, UserEntity } from '@libs/repository'
-import { NotFoundUserError, UUID, UserIsBlockedError, getNow, objToString } from '@libs/core'
+import {
+  InvalidAuthCodeError,
+  NotFoundUserError,
+  UUID,
+  UserIsBlockedError,
+  getNow,
+} from '@libs/core'
 import { CustomLogger } from '@lib/logger'
 import { CryptoService } from '@lib/crypto'
 import type { LoginMsg, RegistrationMsg, VerifyAuthCodeMsg } from '@libs/grpc-types'
 import { TokensService } from '@lib/tokens'
 import { ClientKafka, RpcException } from '@nestjs/microservices'
-import { lastValueFrom } from 'rxjs'
+import { RecoveryTokensService } from '@lib/core-auth/core/service/recovery-tokens.service'
 import { RepeatVerifyCodeMsg } from '@lib/kafka-types'
 
 import { AuthIdentifierObj, RegistrationCreatedData } from './types/auth.types'
@@ -36,6 +37,7 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
     private readonly authCodeService: AuthCodeService,
     private readonly tokensService: TokensService,
     @Inject(NOTIFICATIONS_SERVICE_NAME) private readonly notificationClient: ClientKafka,
+    private readonly authRecoveryService: RecoveryTokensService,
   ) {}
 
   public async onModuleInit() {
@@ -58,10 +60,12 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
     })
 
     if (!user) {
-      throw new RpcException(objToString({ userId }))
+      throw new RpcException(new NotFoundUserError(userId).toJSON())
     }
 
-    return { user, timestamp: Date.now() }
+    const { passwordHash, ...pubUser } = user
+
+    return { user: pubUser, timestamp: Date.now() }
   }
 
   public async registration(msg: RegistrationMsg) {
@@ -113,16 +117,20 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
       throw new RpcException(new IdentificationUserError(loginCredentials).toJSON())
     }
 
+    const preAuthToken = await this.tokensService.utils.accessToken.genAccessToken({
+      data: { userId: user.id },
+    })
+
     await this.authCodeService.createAndSendAuthCode(user.id as UUID, user)
 
-    return { user, timestamp: getNow() }
+    return { preAuthToken, userName: user.userName }
   }
 
   public async verifyUserLoginAuthCode(msg: VerifyAuthCodeMsg) {
     const isVerify = await this.authCodeService.verifyAuthCode(msg.userId as UUID, msg.authCode)
 
     if (!isVerify) {
-      throw new RpcException(objToString({ userId: msg.userId, authCode: msg.authCode }))
+      throw new RpcException(new InvalidAuthCodeError(msg.authCode).toJSON())
     }
 
     const user = await this.rep.user.findOne({
@@ -150,13 +158,17 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
           userId: user.id,
           msgContext: NotificationMsgContext.REGISTERED,
           email: user.email,
+          other: {
+            body: JSON.stringify({
+              device: 'sss',
+              ip: '123.33.33.33',
+            }),
+          },
         }
 
-        await lastValueFrom(
-          this.notificationClient.send(
-            NotificationMsgPattern.BASIC_SEND_NOTIFICATION,
-            msgToSendSuccessfulAuthNotification,
-          ),
+        this.notificationClient.emit(
+          NotificationMsgPattern.BASIC_SEND_NOTIFICATION,
+          msgToSendSuccessfulAuthNotification,
         )
       }
     } else {
@@ -164,17 +176,23 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
         userId: user.id,
         msgContext: NotificationMsgContext.LOGIN,
         email: user.email ?? undefined,
+        other: {
+          body: JSON.stringify({
+            device: 'sss',
+            ip: '123.33.33.33',
+          }),
+        },
       }
 
-      await lastValueFrom(
-        this.notificationClient.send(
-          NotificationMsgPattern.BASIC_SEND_NOTIFICATION,
-          msgToSendSuccessfulAuthNotification,
-        ),
+      this.notificationClient.emit(
+        NotificationMsgPattern.BASIC_SEND_NOTIFICATION,
+        msgToSendSuccessfulAuthNotification,
       )
     }
 
     const tokens = await this.tokensService.genTokensPair({ data: user.id })
+
+    await this.authRecoveryService.setNewRefreshToken(user.id, tokens.refreshToken)
 
     return { userId: user.id, ...tokens }
   }

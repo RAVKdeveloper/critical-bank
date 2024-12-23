@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { RefreshTokenService } from '../refresh/refresh-token.service'
 import { ConfigService } from '@libs/config'
-import { AccessTokenData, GenAccessTokenDto } from '@lib/tokens/types/gen-tokens.dto'
+import { AccessTokenData, GenAccessTokenDto, ObjPayload } from '@lib/tokens/types/gen-tokens.dto'
 import type { TokensJwtEnvsModel } from '@lib/tokens/model/jwt.envs.model'
 import type { JwtToken } from '@libs/core'
 import type { ReturnVerifyAccessToken } from '@lib/tokens/types/verify-token.dto'
@@ -26,7 +26,7 @@ export class AccessTokenService {
       isLight: false,
     }
     const encryptData = await this.cryptoService.encrypting.encryptSync(dataToEncrypt, key)
-    const accessToken = await this.jwtService.signAsync(encryptData)
+    const accessToken = await this.jwtService.signAsync({ data: encryptData } satisfies ObjPayload)
 
     return accessToken
   }
@@ -38,15 +38,15 @@ export class AccessTokenService {
       isLight: true,
     }
     const encryptData = await this.cryptoService.encrypting.encryptSync(dataToEncrypt, key)
-    const accessToken = await this.jwtService.signAsync(encryptData)
+    const accessToken = await this.jwtService.signAsync({ data: encryptData } satisfies ObjPayload)
 
     return accessToken
   }
 
   public async verifyAccessToken<T>(accessToken: JwtToken): Promise<ReturnVerifyAccessToken<T>> {
     const key = this.cfg.env.ACCESS_TOKEN_ENCRYPT_KEY
-    const payload: any = await this.jwtService.verifyAsync(accessToken)
-    const decryptData = await this.cryptoService.encrypting.decryptSync(payload, key)
+    const payload: ObjPayload = await this.jwtService.verifyAsync(accessToken)
+    const decryptData = await this.cryptoService.encrypting.decryptSync(payload.data, key)
 
     return JSON.parse(decryptData)
   }

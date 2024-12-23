@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { Partitioners } from 'kafkajs'
 
-import { CustomLogger } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { loadEnvironment } from '@libs/config'
 import { AUTH_CLIENT_ID, AUTH_CONSUMER } from '@lib/kafka-types'
 
@@ -13,7 +13,7 @@ import { ConfigModel } from './config/config.model'
 async function bootstrap() {
   const config = loadEnvironment(ConfigModel)
 
-  const kafkaApp = await NestFactory.createMicroservice<MicroserviceOptions>(AuthAppModule, {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AuthAppModule, {
     transport: Transport.KAFKA,
     options: {
       client: {
@@ -29,8 +29,8 @@ async function bootstrap() {
     },
   })
 
-  kafkaApp.useLogger(kafkaApp.get(CustomLogger))
+  app.useLogger(app.get(LokiLogger))
 
-  await kafkaApp.listen()
+  await app.listen()
 }
 bootstrap()

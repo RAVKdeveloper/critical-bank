@@ -13,8 +13,8 @@ export class BankCryptoWallet extends BaseEntity {
   @Column({ name: 'public_key', nullable: true, default: null, type: 'varchar' })
   readonly publicKey: Nullable<string>
 
-  @Column({ name: 'private_key' })
-  readonly privateKey: string
+  @Column({ name: 'private_key_fingerprint', type: 'varchar' })
+  readonly privateKeyFingerprint: string
 
   @Column({ name: 'address' })
   readonly address: string

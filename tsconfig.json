@@ -66,12 +66,6 @@
       "@lib/kafka-types/*": [
         "libs/kafka-types/src/*"
       ],
-      "@lib/logger": [
-        "libs/logger/src"
-      ],
-      "@lib/logger/*": [
-        "libs/logger/src/*"
-      ],
       "@lib/loki": [
         "libs/loki/src"
       ],
@@ -113,6 +107,12 @@
       ],
       "@lib/core-auth/*": [
         "libs/core-auth/src/*"
+      ],
+      "@lib/web3": [
+        "libs/web3/src"
+      ],
+      "@lib/web3/*": [
+        "libs/web3/src/*"
       ]
     }
   },

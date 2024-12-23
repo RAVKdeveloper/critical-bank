@@ -2,12 +2,8 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: 'apigateway'
     scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:9090']
-    metrics_path: /metrics
-  - job_name: 'node'
-    scrape_interval: 5s
-    static_configs:
-      - targets: ['node-exporter:9100']
+      - targets: ['critical-bank-apigateway:3001']
+    metrics_path: /api/metrics

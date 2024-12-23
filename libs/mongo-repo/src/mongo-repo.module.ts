@@ -3,9 +3,20 @@ import { MongoRepoService } from './mongo-repo.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import { ConfigService } from '@libs/config'
 import { MongoRepoEnvsModel } from './mongo-repo.model'
-import { NotificationEntity, NotificationSchema } from './schemas'
+import {
+  NotificationEntity,
+  NotificationSchema,
+  ContractAbiEntity,
+  ContractAbiSchema,
+  PrivateKeyEntity,
+  PrivateKeySchema,
+} from './schemas'
 
-const entities = [{ name: NotificationEntity.schemaName, schema: NotificationSchema }]
+const entities = [
+  { name: NotificationEntity.schemaName, schema: NotificationSchema },
+  { name: ContractAbiEntity.schemaName, schema: ContractAbiSchema },
+  { name: PrivateKeyEntity.schemaName, schema: PrivateKeySchema },
+]
 
 @Global()
 @Module({

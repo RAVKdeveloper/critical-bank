@@ -127,15 +127,6 @@
         "tsConfigPath": "libs/kafka-types/tsconfig.lib.json"
       }
     },
-    "logger": {
-      "type": "library",
-      "root": "libs/logger",
-      "entryFile": "index",
-      "sourceRoot": "libs/logger/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/logger/tsconfig.lib.json"
-      }
-    },
     "loki": {
       "type": "library",
       "root": "libs/loki",
@@ -214,6 +205,37 @@
       "sourceRoot": "libs/core-auth/src",
       "compilerOptions": {
         "tsConfigPath": "libs/core-auth/tsconfig.lib.json"
+      }
+    },
+    "web3": {
+      "type": "library",
+      "root": "libs/web3",
+      "entryFile": "index",
+      "sourceRoot": "libs/web3/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/web3/tsconfig.lib.json"
+      }
+    },
+    "private-keys": {
+      "type": "application",
+      "root": "src/main",
+      "entryFile": "./",
+      "sourceRoot": "apps/private-keys/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/private-keys/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "proto/entities.proto",
+            "outDir": "dist/apps/auth/proto",
+            "watchAssets": true
+          },
+          {
+            "include": "proto/*.proto",
+            "outDir": "dist/apps/auth",
+            "watchAssets": true
+          }
+        ],
+        "watchAssets": true
       }
     }
   }

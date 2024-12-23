@@ -14,6 +14,7 @@ import {
   NOTIFICATION_CONSUMER,
 } from '@lib/kafka-types'
 import { TokensModule } from '@lib/tokens'
+import { CoreAuthModule } from '@lib/core-auth'
 
 import { ConfigModule } from '../../config/config.module'
 
@@ -59,6 +60,7 @@ import { AuthCodeModule } from '../auth-code/auth-code.module'
     ]),
     AuthCodeModule,
     TokensModule,
+    CoreAuthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

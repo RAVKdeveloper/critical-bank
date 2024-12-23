@@ -62,8 +62,13 @@ export interface UserBlockAccount {
 }
 
 export interface ResUserMsg {
-  user: UserEntity | undefined
+  user: Omit<UserEntity, 'passwordHash'> | undefined
   timestamp: number
+}
+
+export interface ResponseLoginMsg {
+  readonly preAuthToken: string
+  readonly userName: string
 }
 
 export interface ResVerifyUserWithTokensMSg {
@@ -90,7 +95,7 @@ export interface KafkaAuthRecoveryController {
 export interface KafkaAuthController {
   repeatAuthCode: (msg: RepeatVerifyCodeMsg) => Promise<void>
   registration(request: RegistrationMsg): Promise<ResUserMsg>
-  login(request: LoginMsg): Promise<ResUserMsg>
+  login(request: LoginMsg): Promise<ResponseLoginMsg>
   verifyAuthCode(request: VerifyAuthCodeMsg): Promise<ResVerifyUserWithTokensMSg>
   me(request: GetMeMsg): Promise<ResUserMsg>
 }

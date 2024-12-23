@@ -39,6 +39,12 @@ export class NotFoundUserError extends BaseError<'notFoundUserError'> {
   }
 }
 
+export class InvalidAuthCodeError extends BaseError<'invalidAuthCodeError'> {
+  constructor(code: string) {
+    super('invalidAuthCodeError', { message: objToString({ authCode: code }) })
+  }
+}
+
 export class UserIsBlockedError extends BaseError<'userIsBlockedError'> {
   constructor(userId: string) {
     super('userIsBlockedError', { message: objToString({ userId }), status: HttpStatus.FORBIDDEN })

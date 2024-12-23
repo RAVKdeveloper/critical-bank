@@ -22,6 +22,9 @@ export interface AccessTokenData<T> {
   readonly isLight: boolean
 }
 
+export interface ObjPayload {
+  data: string
+}
 export interface RefreshTokenData<T> {
   readonly data: T
 }

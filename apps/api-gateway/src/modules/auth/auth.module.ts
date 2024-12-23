@@ -9,6 +9,7 @@ import { AUTH_CLIENT_ID, AUTH_CONSUMER, AUTH_SERVICE_NAME } from '@lib/kafka-typ
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 import { ConfigModel } from '../../config/config.model'
+import { CoreAuthModule } from '@lib/core-auth'
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ConfigModel } from '../../config/config.model'
         ],
       },
     ]),
+    CoreAuthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

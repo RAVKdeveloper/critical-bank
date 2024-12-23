@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ControllerResponse, FailResponseBody } from '@libs/core/controller'
+import { ControllerResponse, FailResponseBody, makeErrorResponse } from '@libs/core/controller'
 import {
   CallHandler,
   ExecutionContext,
@@ -15,6 +15,12 @@ import { Observable, catchError, map, of } from 'rxjs'
 
 import { objToString } from '../utils'
 
+interface MicroserviceErr {
+  status: HttpStatus
+  error: string
+  message: string
+}
+
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
   private logger = new Logger(HttpInterceptor.name)
@@ -23,6 +29,7 @@ export class HttpInterceptor implements NestInterceptor {
 
   public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const res: Response = context.switchToHttp().getResponse()
+    const req: Request = context.switchToHttp().getRequest()
 
     return next
       .handle()
@@ -30,6 +37,10 @@ export class HttpInterceptor implements NestInterceptor {
         map((data: ControllerResponse<unknown> | undefined | null) => {
           if (!data) {
             return null
+          }
+
+          if (req.path.startsWith('/api/metrics')) {
+            return data
           }
 
           if (data.headers) {
@@ -48,6 +59,30 @@ export class HttpInterceptor implements NestInterceptor {
       )
       .pipe(
         catchError((err: Error | { body: FailResponseBody<string>; status: number }) => {
+          if ((err as any)?.message) {
+            const microserviceErr = JSON.parse((err as any).message) as MicroserviceErr
+            const status = microserviceErr.status ?? HttpStatus.INTERNAL_SERVER_ERROR
+            let parsedErr: Record<string, any>
+
+            try {
+              parsedErr = JSON.parse(microserviceErr.message)
+            } catch {
+              parsedErr = { details: (err as Error).message }
+            }
+
+            this.logger.error(`Kafka error ${microserviceErr.status}: ${microserviceErr.message}`)
+
+            res.status(status)
+
+            return of({
+              success: false,
+              message: objToString({
+                error: microserviceErr.error ?? 'Unknown error',
+                ...parsedErr,
+              }),
+            })
+          }
+
           if (err instanceof Error) {
             let status = HttpStatus.INTERNAL_SERVER_ERROR
             let message = err.message

@@ -19,7 +19,15 @@ export class HashService {
   }
 
   // Hashed not sold and pepper and only keccak256 algorithm
-  public async lightHash(data: any, encoding: HashEncoding = 'base58') {
+  public async lightHash(data: any, encoding: HashEncoding = 'base58', rounds: number = 0) {
+    if (rounds > 0) {
+      let currentHash = data
+      for (let i = 1; i <= rounds; i++) {
+        currentHash = this.lightHash(currentHash)
+      }
+      return currentHash
+    }
+
     const bytesFromMsg = this.serializeToRaw(data)
     const keccakHash = this.hashFn(bytesFromMsg)
     return this.encodingService.encoding(keccakHash, encoding)

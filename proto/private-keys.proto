@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package privateKeys;
+
+service PrivateKeysService {
+
+    rpc GetPrivateKeyHash (GetPrivateKeyHashMsg) returns (ResponsePrivateKeyHashMsg) {}
+
+    rpc SignDataByPrivateKey (SignDataByPrivateKeyMsg) returns (ResponseSignDataByPrivateKeyMsg) {}
+
+    rpc IsValidAddress (IsValidPubKeyMsg) returns (ResponseIsValidPubKeyMsg) {}
+
+}
+
+message GetPrivateKeyHashMsg {
+    string remainderFingerprint = 1;
+}
+
+message ResponsePrivateKeyHashMsg {
+    string privateKeyHash = 1;
+}
+
+message SignDataByPrivateKeyMsg {
+    string remainderFingerprint = 1;
+    bytes data = 2; 
+    string chain = 3;
+}
+
+message ResponseSignDataByPrivateKeyMsg {
+    bytes signature = 1;
+}
+
+message IsValidPubKeyMsg {
+    bytes address = 1;
+    string remainderFingerprint = 2;
+}
+
+message ResponseIsValidPubKeyMsg {
+    bool valid = 1;
+    uint64 timestamp = 2;
+}

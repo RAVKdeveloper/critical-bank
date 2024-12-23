@@ -56,6 +56,8 @@ export class BaseAuthGuard implements CanActivate {
 
       const refreshInUser = await this.recoveryTokensService.refreshExistBy(payload.data.userId)
 
+      console.log(refreshToken, refreshInUser)
+
       if (!refreshInUser) {
         throw new UnauthorizedException()
       }

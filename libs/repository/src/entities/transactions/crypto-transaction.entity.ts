@@ -10,7 +10,6 @@ import { ColumnNumericTransformer } from '@libs/repository/transformers'
 @Entity({ name: 'crypto_transaction' })
 @Unique(['networkTxHash', 'cryptoCurrency'])
 export class CryptoTransactionEntity extends BaseEntity {
-  @Index('Crypto_tx_network_tx_hash_index')
   @Column({ name: 'network_tx_hash', nullable: true, type: 'varchar' })
   readonly networkTxHash: Nullable<string>
 

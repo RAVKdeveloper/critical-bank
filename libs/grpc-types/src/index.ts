@@ -1,5 +1,5 @@
 export * from './proto/entities'
-export * from './proto/auth'
+export * from './proto/private-keys'
 
 // Package
 

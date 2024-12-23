@@ -7,7 +7,7 @@ import bs58 from 'bs58'
 export class EncodingService {
   private readonly libFormats: Record<OtherLibEncoding, Function[]> = {
     base58: [bs58.encode, bs58.decode],
-    'utf-8': [utf8ToBytes, bytesToUtf8],
+    'utf-8': [bytesToUtf8, utf8ToBytes],
   }
 
   public encoding<T extends string>(data: Uint8Array, format: HashEncoding): T {

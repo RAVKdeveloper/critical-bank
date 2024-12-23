@@ -2,8 +2,20 @@ import { arrayTransformer, numTransformer } from '@libs/core'
 import { Transform } from 'class-transformer'
 import { IsArray, IsNumber, IsString } from 'class-validator'
 import type { TokensJwtEnvsModel } from '@lib/tokens/model/jwt.envs.model'
+import { CoreAuthEnvsModel } from '@lib/core-auth/core/model/core-auth.envs.model'
 
-export class ConfigModel implements TokensJwtEnvsModel {
+export class ConfigModel implements TokensJwtEnvsModel, CoreAuthEnvsModel {
+  @IsString()
+  AUTH_REDIS_HOST: string
+
+  @Transform(numTransformer)
+  @IsNumber()
+  AUTH_REDIS_PORT: number
+
+  @Transform(numTransformer)
+  @IsNumber()
+  REFRESH_TOKENS_CACHE_TTL: number
+
   @IsString()
   ACCESS_SECRET_KEY: string
 

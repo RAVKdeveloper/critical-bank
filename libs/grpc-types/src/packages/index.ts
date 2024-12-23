@@ -1,5 +1,5 @@
-import { AUTH_PACKAGE_NAME } from '../index'
+import { PRIVATE_KEYS_PACKAGE_NAME } from '../proto/private-keys'
 
 export enum GrpcPackage {
-  AUTH = AUTH_PACKAGE_NAME,
+  PRIVATE_KEYS = PRIVATE_KEYS_PACKAGE_NAME,
 }

@@ -2,8 +2,7 @@ import { Controller } from '@nestjs/common'
 
 import { UUID } from '@libs/core'
 import { Transactional } from '@nestjs-cls/transactional'
-import { MessagePattern, Payload } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices'
 import {
   AuthMsgPattern,
   RepeatVerifyCodeMsg,
@@ -14,6 +13,7 @@ import {
   ResUserMsg,
   ResVerifyUserWithTokensMSg,
   VerifyAuthCodeMsg,
+  ResponseLoginMsg,
 } from '@lib/kafka-types'
 
 import { AuthService } from './auth.service'
@@ -29,12 +29,11 @@ export class AuthController implements KafkaAuthController {
   }
 
   @MessagePattern(AuthMsgPattern.USER_LOGIN)
-  @Transactional()
-  public async login(@Payload() msg: LoginMsg): Promise<ResUserMsg> {
+  public async login(@Payload() msg: LoginMsg): Promise<ResponseLoginMsg> {
     return await this.authService.login(msg)
   }
 
-  @MessagePattern(AuthMsgPattern.REPEAT_VERIFY_CODE)
+  @EventPattern(AuthMsgPattern.REPEAT_VERIFY_CODE)
   public async repeatAuthCode(@Payload() msg: RepeatVerifyCodeMsg): Promise<void> {
     return await this.authService.repeatAuthCode(msg)
   }

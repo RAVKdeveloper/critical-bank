@@ -31,6 +31,7 @@ export class EmailNotificationService implements NotificationInterface {
         email: dto.to,
         code,
         expirationTime: AUTH_CODE_EX_TIME / 1000 / 60,
+        date: new Date().toDateString(),
       },
     }
 
@@ -73,7 +74,7 @@ export class EmailNotificationService implements NotificationInterface {
     await this.send(msg)
   }
 
-  @RateLimit()
+  // @RateLimit()
   public async send(msg: ISendMailOptions) {
     await this.mailer.sendMail(msg)
   }

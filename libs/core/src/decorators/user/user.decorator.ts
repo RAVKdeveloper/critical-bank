@@ -13,7 +13,7 @@ const getUser = (data: UserData, ctx: ExecutionContext) => {
     tgUser: undefined,
   }
 
-  if (data.withTg) {
+  if (data?.withTg) {
     user.tgUser = request.tgUser
   }
 

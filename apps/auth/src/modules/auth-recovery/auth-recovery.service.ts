@@ -7,7 +7,6 @@ import { TokensService } from '@lib/tokens'
 import { UUID } from '@libs/core'
 import { PRE_AUTH_TOKEN_CACHE_KEY } from '@libs/constants'
 import { CryptoService } from '@lib/crypto'
-import { lastValueFrom } from 'rxjs'
 
 import { AuthCodeService } from '../auth-code/auth-code.service'
 import { IdentificationUserError } from '../auth/auth.erros'
