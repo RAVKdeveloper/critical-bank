@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  notifications:
+    container_name: critical-bank-notifications
+    image: ravkdeveloper/critical-bank-notifications:latest
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ../envs/notifications.env
+    ports:
+      - '3003:3003'
+    restart: on-failure
+    networks:
+      - critical-bank-net
+
+networks:
+  critical-bank-net:
+    external: true

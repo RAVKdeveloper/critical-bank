@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  auth:
+    container_name: critical-bank-auth
+    image: ravkdeveloper/critical-bank-auth:latest
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ../envs/auth.env
+    ports:
+      - '3002:3002'
+    restart: on-failure
+    networks:
+      - critical-bank-net
+
+networks:
+  critical-bank-net:
+    external: true

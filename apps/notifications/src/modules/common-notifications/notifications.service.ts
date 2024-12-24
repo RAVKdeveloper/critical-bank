@@ -7,7 +7,7 @@ import {
   GetAllNotificationsByUserIdMsg,
   SendEmailNotificationMsg,
 } from '@lib/kafka-types'
-import { CustomLogger } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { NotificationTypeEnum } from '@lib/mongo-repo/enums'
 import { genPaginationData } from '@libs/core'
 
@@ -20,7 +20,7 @@ export class NotificationsService {
     private readonly rep: MongoRepoService,
     private readonly tgNotifications: TgNotificationsService,
     private readonly emailNotifications: EmailNotificationService,
-    private readonly logger: CustomLogger,
+    private readonly logger: LokiLogger,
   ) {}
 
   public async getAllNotificationsByUserId(dto: GetAllNotificationsByUserIdMsg) {

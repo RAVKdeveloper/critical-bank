@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Telegraf } from 'telegraf'
 
 import { RateLimit } from '@lib/rate-limiter'
-import { CustomLogger } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { ConfigService } from '@libs/config'
 
 import type { TgBotModel } from './tg-bot.model'
@@ -13,7 +13,7 @@ export class TgBotService {
 
   constructor(
     private readonly cfg: ConfigService<TgBotModel>,
-    private readonly logger: CustomLogger,
+    private readonly logger: LokiLogger,
   ) {
     this.bot = new Telegraf(this.cfg.env.TG_API_KEY)
   }

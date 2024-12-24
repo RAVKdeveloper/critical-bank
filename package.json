@@ -25,7 +25,9 @@
     "apigateway:prod": "NODE_ENV=production APP=apigateway ENV_FILE_PATH=envs node dist/apps/api-gateway/src/main.js",
     "auth:dev": "NODE_ENV=development APP=auth ENV_FILE_PATH=envs nest start auth --watch",
     "auth:prod": "NODE_ENV=production APP=auth ENV_FILE_PATH=envs node dist/apps/auth/src/main.js",
-    "notif:dev": "NODE_ENV=development APP=notification ENV_FILE_PATH=envs nest start notifications --watch"
+    "notif:dev": "NODE_ENV=development APP=notifications ENV_FILE_PATH=envs nest start notifications --watch",
+    "notif:prod": "NODE_ENV=development APP=notifications ENV_FILE_PATH=envs node dist/apps/notifications/src/main.js",
+    "docker:run": "node ./scripts/docker/build-and-run.script.js"
   },
   "dependencies": {
     "@clickhouse/client": "^1.6.0",

@@ -4,7 +4,7 @@ import { Partitioners } from 'kafkajs'
 
 import { RepositoryModule } from '@libs/repository'
 import { CacheDatabaseModule } from '@libs/cache'
-import { CustomLoggerModule } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { CryptoModule } from '@lib/crypto'
 import { KafkaClientModule } from '@lib/micro-clients'
 import { ConfigService } from '@libs/config'
@@ -28,7 +28,6 @@ import { AuthCodeModule } from '../auth-code/auth-code.module'
     RepositoryModule,
     ConfigModule,
     CacheDatabaseModule,
-    CustomLoggerModule,
     CryptoModule,
     KafkaClientModule.registerAsync([
       {
@@ -63,6 +62,6 @@ import { AuthCodeModule } from '../auth-code/auth-code.module'
     CoreAuthModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LokiLogger],
 })
 export class AuthModule {}

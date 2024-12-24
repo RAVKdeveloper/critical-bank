@@ -9,13 +9,12 @@ import {
   UserIsBlockedError,
   getNow,
 } from '@libs/core'
-import { CustomLogger } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { CryptoService } from '@lib/crypto'
-import type { LoginMsg, RegistrationMsg, VerifyAuthCodeMsg } from '@libs/grpc-types'
 import { TokensService } from '@lib/tokens'
 import { ClientKafka, RpcException } from '@nestjs/microservices'
 import { RecoveryTokensService } from '@lib/core-auth/core/service/recovery-tokens.service'
-import { RepeatVerifyCodeMsg } from '@lib/kafka-types'
+import { LoginMsg, RegistrationMsg, RepeatVerifyCodeMsg, VerifyAuthCodeMsg } from '@lib/kafka-types'
 
 import { AuthIdentifierObj, RegistrationCreatedData } from './types/auth.types'
 import { AuthCodeService } from '../auth-code/auth-code.service'
@@ -32,7 +31,7 @@ import {
 export class AuthService implements OnModuleInit, OnApplicationShutdown {
   constructor(
     private readonly rep: RepositoryService,
-    private readonly logger: CustomLogger,
+    private readonly logger: LokiLogger,
     private readonly cryptoService: CryptoService,
     private readonly authCodeService: AuthCodeService,
     private readonly tokensService: TokensService,
@@ -86,7 +85,7 @@ export class AuthService implements OnModuleInit, OnApplicationShutdown {
 
     await this.authCodeService.createAndSendAuthCode(newUser.id as UUID, newUser as UserEntity)
 
-    this.logger.info(`Create new user! UUID ${newUser.id}`)
+    this.logger.log(`Create new user! UUID ${newUser.id}`)
 
     return { user: newUser as UserEntity, timestamp: getNow() }
   }

@@ -3,7 +3,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { Partitioners } from 'kafkajs'
 
 import { NOTIFICATIONS_CLIENT_ID, NOTIFICATION_CONSUMER } from '@lib/kafka-types'
-import { CustomLogger } from '@lib/logger'
+import { LokiLogger } from '@lib/loki'
 import { loadEnvironment } from '@libs/config'
 
 import { NotificationAppModule } from './app.module'
@@ -30,7 +30,7 @@ async function bootstrap() {
     },
   })
 
-  app.useLogger(app.get(CustomLogger))
+  app.useLogger(app.get(LokiLogger))
 
   await app.listen()
 }
