@@ -1,10 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
 import { Request, Response } from 'express'
 
 import { CookieAuthKeys, RequestHeaders } from '@libs/constants'
@@ -55,8 +49,6 @@ export class BaseAuthGuard implements CanActivate {
       })
 
       const refreshInUser = await this.recoveryTokensService.refreshExistBy(payload.data.userId)
-
-      console.log(refreshToken, refreshInUser)
 
       if (!refreshInUser) {
         throw new UnauthorizedException()

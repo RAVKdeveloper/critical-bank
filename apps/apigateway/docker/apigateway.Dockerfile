@@ -12,5 +12,5 @@ COPY --chown=777 . .
 
 RUN pnpm i
 RUN nest build apigateway
-RUN chmod +x ./apps/api-gateway/start.sh
-CMD ["/bin/bash", "-c", "./apps/api-gateway/start.sh"]
+RUN chmod +x ./apps/apigateway/start.sh
+CMD ["/bin/bash", "-c", "./apps/apigateway/start.sh"]

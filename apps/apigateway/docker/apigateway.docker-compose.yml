@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/usr/src/app
     env_file:
-      - ../envs/apigateway.env
+      - ../apigateway.env
     ports:
       - '3001:3001'
     depends_on:

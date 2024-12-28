@@ -6,31 +6,31 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
+    "tsConfigPath": "apps/apigateway/tsconfig.app.json",
     "assets": [
       {
         "include": "proto/entities.proto",
-        "outDir": "dist/apps/api-gateway/proto",
+        "outDir": "dist/apps/apigateway/proto",
         "watchAssets": true
       },
       {
         "include": "proto/*.proto",
-        "outDir": "dist/apps/api-gateway",
+        "outDir": "dist/apps/apigateway",
         "watchAssets": true
       }
     ],
     "watchAssets": true
   },
   "monorepo": true,
-  "root": "apps/api-gateway",
+  "root": "apps/apigateway",
   "projects": {
-    "api-gateway": {
+    "apigateway": {
       "type": "application",
-      "root": "apps/api-gateway",
+      "root": "apps/apigateway",
       "entryFile": "src/main",
       "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+        "tsConfigPath": "apps/apigateway/tsconfig.app.json"
       }
     },
     "auth": {
@@ -236,6 +236,15 @@
           }
         ],
         "watchAssets": true
+      }
+    },
+    "account": {
+      "type": "application",
+      "root": "apps/account",
+      "entryFile": "main",
+      "sourceRoot": "apps/account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/account/tsconfig.app.json"
       }
     }
   }

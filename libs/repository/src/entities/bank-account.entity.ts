@@ -9,7 +9,7 @@ import { ColumnNumericTransformer } from '../transformers'
 
 @Entity({ name: 'bank_account' })
 export class BankAccountEntity extends BaseEntity {
-  @Column({ type: 'varchar', length: 255, name: 'account_number', unique: true })
+  @Column({ type: 'varchar', length: 20, name: 'account_number', unique: true })
   readonly accountNumber: string
 
   @Column({ type: 'enum', enum: CurrencyEnum, name: 'currency', default: CurrencyEnum.RUB })
@@ -21,7 +21,7 @@ export class BankAccountEntity extends BaseEntity {
   @Column({
     name: 'balance',
     type: 'numeric',
-    precision: 20,
+    precision: 100,
     scale: 5,
     default: 0,
     transformer: new ColumnNumericTransformer(),
@@ -44,9 +44,6 @@ export class BankAccountEntity extends BaseEntity {
 
   @Column({ name: 'is_premium_account', default: false })
   readonly isPremiumAccount: boolean
-
-  @Column({ name: 'is_default_account' })
-  readonly isDefaultAccount: boolean
 
   @ManyToOne(() => UserEntity, user => user.accounts, { onDelete: 'CASCADE', cascade: true })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })

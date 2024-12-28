@@ -1,4 +1,4 @@
-import { RegistrationMsg } from '@libs/grpc-types'
+import { RegistrationMsg } from '@lib/kafka-types'
 import { ApiProperty } from '@nestjs/swagger'
 import {
   IsEmail,

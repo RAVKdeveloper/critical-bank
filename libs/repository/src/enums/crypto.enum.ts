@@ -1,6 +1,6 @@
 export enum CryptoEnum {
-  ETH = 'ETH',
-  USDT = 'USDT',
-  ARC = 'ARC',
-  BTC = 'BTC',
+  ETH = 'ETH', // eth
+  USDT = 'USDT', // eth, sol, trc
+  BTC = 'BTC', // btc
+  TON = 'TON', // ton
 }

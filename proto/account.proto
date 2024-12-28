@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package account;
+
+
+service AccountService {
+    rpc getAllAccounts (GetAccountsMsg) returns (ResponseGetAccountsMsg) {}
+}
+
+
+message GetAccountsMsg {
+    string userId = 1;
+}
+
+message GetBankAccountsMsg {
+    string id = 1;
+    string accountNumber = 2;
+    string currency = 3;
+    optional string accountName = 4;
+    int64 balance = 5;
+    string affiliation = 6;
+    string accountType = 7;
+    bool isBlocked = 8;
+    bool isPremiumAccount = 9;
+    string createdAt = 10;
+    string updatedAt = 11;
+}
+
+message GetCryptoWalletsMsg {
+    string id = 1;
+    string cryptoCurrency = 2;
+    string address = 3;
+    int64 tokenBalance = 4;
+    bool isBlocked = 5;
+}
+
+message ResponseGetAccountsMsg {
+    repeated GetBankAccountsMsg bankAccounts = 1;
+    repeated GetCryptoWalletsMsg cryptoWallets = 2;
+}

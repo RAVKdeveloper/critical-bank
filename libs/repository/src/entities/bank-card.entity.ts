@@ -77,10 +77,8 @@ export class BankCardEntity extends BaseEntity {
   readonly cardLimits: Relation<CardLimitsEntity>
 
   @OneToMany(() => FiatTransactionEntity, tx => tx.sender)
-  @JoinColumn({ name: 'transactions_withdraw_id', referencedColumnName: 'id' })
   readonly transactionsWithdraw: Relation<FiatTransactionEntity[]>
 
   @OneToMany(() => FiatTransactionEntity, tx => tx.recipient)
-  @JoinColumn({ name: 'transactions_replenishment_id', referencedColumnName: 'id' })
   readonly transactionsReplenishment: Relation<FiatTransactionEntity[]>
 }

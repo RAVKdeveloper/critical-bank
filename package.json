@@ -21,12 +21,12 @@
     "mongo:generate": "node ./scripts/mongo/mongo-gen.js",
     "mongo:up": "node ./scripts/mongo/mongo-up.js",
     "mongo:down": "node ./scripts/mongo/mongo-down.js",
-    "apigateway:dev": "NODE_ENV=development APP=apigateway ENV_FILE_PATH=envs nest start api-gateway --watch",
-    "apigateway:prod": "NODE_ENV=production APP=apigateway ENV_FILE_PATH=envs node dist/apps/api-gateway/src/main.js",
-    "auth:dev": "NODE_ENV=development APP=auth ENV_FILE_PATH=envs nest start auth --watch",
-    "auth:prod": "NODE_ENV=production APP=auth ENV_FILE_PATH=envs node dist/apps/auth/src/main.js",
-    "notif:dev": "NODE_ENV=development APP=notifications ENV_FILE_PATH=envs nest start notifications --watch",
-    "notif:prod": "NODE_ENV=development APP=notifications ENV_FILE_PATH=envs node dist/apps/notifications/src/main.js",
+    "apigateway:dev": "NODE_ENV=development APP=apigateway ENV_FILE_PATH=apps/apigateway nest start apigateway --watch",
+    "apigateway:prod": "NODE_ENV=production APP=apigateway ENV_FILE_PATH=apps/apigateway node dist/apps/apigateway/src/main.js",
+    "auth:dev": "NODE_ENV=development APP=auth ENV_FILE_PATH=apps/auth nest start auth --watch",
+    "auth:prod": "NODE_ENV=production APP=auth ENV_FILE_PATH=apps/auth node dist/apps/auth/src/main.js",
+    "notif:dev": "NODE_ENV=development APP=notifications ENV_FILE_PATH=apps/notifications nest start notifications --watch",
+    "notif:prod": "NODE_ENV=development APP=notifications ENV_FILE_PATH=apps/notifications node dist/apps/notifications/src/main.js",
     "docker:run": "node ./scripts/docker/build-and-run.script.js"
   },
   "dependencies": {

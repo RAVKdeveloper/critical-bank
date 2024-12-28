@@ -11,8 +11,8 @@ if (!name) {
   throw new Error('Name is not exist!')
 }
 
-const buildStr = `docker build -f ./docker/${name.toLowerCase()}.Dockerfile -t ravkdeveloper/critical-bank-${name}:latest .`
-const runStr = `docker compose -f ./docker/${name}.docker-compose.yml --env-file ./envs/${name}.env up -d`
+const buildStr = `docker build -f ./apps/${name}/docker/${name.toLowerCase()}.Dockerfile -t ravkdeveloper/critical-bank-${name}:latest .`
+const runStr = `docker compose -f ./apps/${name}/docker/${name}.docker-compose.yml --env-file ./envs/${name}.env up -d`
 
 execSync(`${buildStr}${isRun ? ` && ${runStr}` : ''}`, {
   stdio: 'inherit',

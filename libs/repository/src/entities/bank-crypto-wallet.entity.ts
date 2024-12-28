@@ -1,11 +1,13 @@
-import { Entity, Column, ManyToOne, Relation, JoinColumn, OneToMany } from 'typeorm'
+import { Entity, Column, ManyToOne, Relation, JoinColumn, OneToMany, Unique } from 'typeorm'
 
 import { BaseEntity } from '../base/base.entity'
 import { UserEntity, CryptoTransactionEntity } from './index'
 import { CryptoEnum } from '../enums'
 import { Nullable } from '@libs/core'
+import { ColumnNumericTransformer } from '../transformers'
 
 @Entity({ name: 'bank_crypto_wallet' })
+@Unique(['address', 'cryptoCurrency'])
 export class BankCryptoWallet extends BaseEntity {
   @Column({ name: 'crypto_currency', type: 'enum', enum: CryptoEnum })
   readonly cryptoCurrency: CryptoEnum
@@ -19,15 +21,26 @@ export class BankCryptoWallet extends BaseEntity {
   @Column({ name: 'address' })
   readonly address: string
 
+  @Column({
+    name: 'token_balance',
+    type: 'numeric',
+    precision: 100,
+    scale: 10,
+    transformer: new ColumnNumericTransformer(),
+    default: 0,
+  })
+  tokenBalance: number
+
+  @Column({ name: 'is_blocked', type: 'boolean', default: false })
+  readonly isBlocked: boolean
+
   @ManyToOne(() => UserEntity, user => user.wallets, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   readonly user: Relation<UserEntity>
 
   @OneToMany(() => CryptoTransactionEntity, tx => tx.sender)
-  @JoinColumn({ name: 'crypto_transactions_withdraw_id', referencedColumnName: 'id' })
   readonly transactionsWithdraw: Relation<CryptoTransactionEntity[]>
 
   @OneToMany(() => CryptoTransactionEntity, tx => tx.recipient)
-  @JoinColumn({ name: 'crypto_transactions_replenishment_id', referencedColumnName: 'id' })
   readonly transactionsReplenishment: Relation<CryptoTransactionEntity[]>
 }
